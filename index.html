@@ -1,768 +1,1088 @@
+No puedo conocer el stock real desde la imagen ni desde el snippet, así que no lo inventé. Te dejo la base preparada para cargar stock por proveedor en cada repuesto; reemplazá los valores del array `PRODUCTOS` por los datos reales de ARZE, COMEX, TRESSOLS y E.PH.
 
+```html
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --fp-blue: #004b93;
+  --fp-blue-dark: #00366f;
+  --fp-orange: #ff6a00;
+  --fp-red: #d72f13;
+  --fp-ink: #172033;
+  --fp-muted: #687385;
+  --fp-line: #dfe6ee;
+  --fp-soft: #f4f7fb;
+  --fp-white: #ffffff;
+  --fp-ok: #14834f;
+  --fp-warn: #b96b00;
+  --fp-no: #b3342a;
+}
 
-  .app {
-    font-family: 'Syne', sans-serif;
-    background: var(--color-background-tertiary);
-    min-height: 100vh;
-    padding: 0;
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.fixpro-app,
+.fixpro-app * {
+  box-sizing: border-box;
+  letter-spacing: 0;
+}
+
+.fixpro-app {
+  min-height: 100svh;
+  background: linear-gradient(180deg, #ffffff 0%, #f3f6fa 100%);
+  color: var(--fp-ink);
+  font-family: "Manrope", system-ui, sans-serif;
+}
+
+.fp-shell {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 18px;
+}
+
+.fp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 0 20px;
+}
+
+.fp-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.fp-mark {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  flex: 0 0 auto;
+  border: 1px solid var(--fp-line);
+  border-radius: 8px;
+  background: var(--fp-white);
+  box-shadow: 0 14px 34px rgba(0, 75, 147, 0.12);
+  overflow: hidden;
+}
+
+.fp-mark::before {
+  content: "";
+  position: absolute;
+  width: 34px;
+  height: 44px;
+  left: 13px;
+  top: 6px;
+  background: var(--fp-orange);
+  clip-path: polygon(55% 0, 100% 0, 65% 42%, 100% 42%, 25% 100%, 42% 55%, 0 55%);
+  box-shadow: 7px 0 0 rgba(215, 47, 19, 0.45);
+}
+
+.fp-mark::after {
+  content: "";
+  position: absolute;
+  width: 42px;
+  height: 10px;
+  left: 8px;
+  bottom: 7px;
+  border-radius: 999px;
+  background: var(--fp-blue);
+  transform: rotate(-10deg);
+}
+
+.fp-name {
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.fp-name span {
+  color: var(--fp-blue);
+}
+
+.fp-name strong {
+  color: var(--fp-orange);
+  font-weight: 800;
+}
+
+.fp-sub {
+  margin-top: 5px;
+  color: var(--fp-muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.fp-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid rgba(0, 75, 147, 0.14);
+  border-radius: 999px;
+  background: var(--fp-white);
+  color: var(--fp-blue-dark);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.fp-status::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--fp-orange);
+}
+
+.fp-panel {
+  border: 1px solid var(--fp-line);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.92);
+  box-shadow: 0 18px 50px rgba(23, 32, 51, 0.08);
+}
+
+.fp-search {
+  padding: 16px;
+}
+
+.fp-search-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1.35fr auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.fp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.fp-field span,
+.fp-filter-label {
+  color: var(--fp-muted);
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.fp-field select,
+.fp-field input {
+  width: 100%;
+  height: 42px;
+  border: 1px solid var(--fp-line);
+  border-radius: 8px;
+  background: var(--fp-soft);
+  color: var(--fp-ink);
+  font: 700 14px "Manrope", system-ui, sans-serif;
+  padding: 0 12px;
+  outline: none;
+}
+
+.fp-field select:focus,
+.fp-field input:focus {
+  border-color: var(--fp-blue);
+  background: var(--fp-white);
+  box-shadow: 0 0 0 4px rgba(0, 75, 147, 0.08);
+}
+
+.fp-button {
+  height: 42px;
+  border: 0;
+  border-radius: 8px;
+  padding: 0 18px;
+  background: var(--fp-blue);
+  color: var(--fp-white);
+  font: 800 14px "Manrope", system-ui, sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.fp-button:hover {
+  background: var(--fp-blue-dark);
+}
+
+.fp-extra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.fp-chip,
+.fp-provider,
+.fp-clear {
+  min-height: 34px;
+  border: 1px solid var(--fp-line);
+  border-radius: 999px;
+  background: var(--fp-white);
+  color: var(--fp-ink);
+  padding: 0 12px;
+  font: 800 12px "Manrope", system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.fp-chip:hover,
+.fp-clear:hover {
+  border-color: var(--fp-blue);
+}
+
+.fp-provider {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--fp-muted);
+}
+
+.fp-provider small {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+}
+
+.fp-provider.is-active {
+  color: var(--fp-white);
+  border-color: transparent;
+}
+
+.fp-provider[data-provider="arze"].is-active { background: var(--fp-blue); }
+.fp-provider[data-provider="comex"].is-active { background: #08705a; }
+.fp-provider[data-provider="tressols"].is-active { background: #96391f; }
+.fp-provider[data-provider="ph"].is-active { background: #165d9e; }
+
+.fp-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  color: var(--fp-ink);
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.fp-switch input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--fp-orange);
+}
+
+.fp-results-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px 0 12px;
+}
+
+.fp-results-title {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.fp-results-sub {
+  margin-top: 4px;
+  color: var(--fp-muted);
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+}
+
+.fp-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.fp-summary span {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  border: 1px solid var(--fp-line);
+  border-radius: 999px;
+  background: var(--fp-white);
+  padding: 0 10px;
+  color: var(--fp-muted);
+  font: 500 11px "DM Mono", monospace;
+}
+
+.fp-list {
+  display: grid;
+  gap: 12px;
+  padding-bottom: 24px;
+}
+
+.fp-card {
+  border: 1px solid var(--fp-line);
+  border-radius: 8px;
+  background: var(--fp-white);
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(23, 32, 51, 0.06);
+}
+
+.fp-card-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  padding: 18px;
+}
+
+.fp-kicker {
+  color: var(--fp-orange);
+  font: 500 11px "DM Mono", monospace;
+  margin-bottom: 6px;
+}
+
+.fp-card h3 {
+  font-size: 19px;
+  line-height: 1.2;
+  margin: 0 0 10px;
+}
+
+.fp-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.fp-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  border-radius: 999px;
+  background: var(--fp-soft);
+  border: 1px solid var(--fp-line);
+  padding: 0 9px;
+  color: var(--fp-muted);
+  font: 700 12px "Manrope", system-ui, sans-serif;
+}
+
+.fp-price {
+  min-width: 160px;
+  text-align: right;
+}
+
+.fp-price span {
+  display: block;
+  color: var(--fp-muted);
+  font: 500 11px "DM Mono", monospace;
+}
+
+.fp-price strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--fp-blue);
+  font: 800 22px "Manrope", system-ui, sans-serif;
+}
+
+.fp-price small {
+  display: block;
+  margin-top: 4px;
+  color: var(--fp-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.fp-stock-table {
+  padding: 0 18px 16px;
+}
+
+.fp-stock-head,
+.fp-stock-row {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1.2fr 0.9fr 0.95fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.fp-stock-head {
+  padding: 10px 0;
+  border-top: 1px solid var(--fp-line);
+  color: var(--fp-muted);
+  font: 500 11px "DM Mono", monospace;
+}
+
+.fp-stock-row {
+  min-height: 46px;
+  border-top: 1px solid #edf2f7;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.fp-cell {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.fp-mono {
+  font-family: "DM Mono", monospace;
+  font-weight: 500;
+}
+
+.fp-supplier {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0 9px;
+  color: var(--fp-white);
+  font: 800 11px "DM Mono", monospace;
+}
+
+.fp-supplier.arze { background: var(--fp-blue); }
+.fp-supplier.comex { background: #08705a; }
+.fp-supplier.tressols { background: #96391f; }
+.fp-supplier.ph { background: #165d9e; }
+
+.fp-stock-pill {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0 9px;
+  font: 800 11px "Manrope", system-ui, sans-serif;
+}
+
+.fp-stock-pill.ok {
+  background: rgba(20, 131, 79, 0.12);
+  color: var(--fp-ok);
+}
+
+.fp-stock-pill.low {
+  background: rgba(185, 107, 0, 0.14);
+  color: var(--fp-warn);
+}
+
+.fp-stock-pill.none {
+  background: rgba(179, 52, 42, 0.12);
+  color: var(--fp-no);
+}
+
+.fp-empty {
+  padding: 44px 18px;
+  text-align: center;
+  color: var(--fp-muted);
+}
+
+.fp-empty strong {
+  display: block;
+  color: var(--fp-ink);
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+@media (max-width: 900px) {
+  .fp-search-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .header {
-    background: var(--color-background-primary);
-    border-bottom: 0.5px solid var(--color-border-tertiary);
-    padding: 1rem 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .fp-search-grid .fp-button {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .fp-shell {
+    padding: 12px;
   }
 
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .logo-icon {
-    width: 36px;
-    height: 36px;
-    background: #1a1a2e;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #e8c84a;
-    font-size: 18px;
-  }
-
-  .logo-text {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    letter-spacing: -0.3px;
-  }
-
-  .logo-sub {
-    font-size: 11px;
-    color: var(--color-text-secondary);
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0.5px;
-  }
-
-  .badge-demo {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    background: #e8c84a20;
-    color: #b8960a;
-    border: 0.5px solid #e8c84a50;
-    padding: 3px 8px;
-    border-radius: 4px;
-    letter-spacing: 0.5px;
-  }
-
-  .search-section {
-    background: var(--color-background-primary);
-    border-bottom: 0.5px solid var(--color-border-tertiary);
-    padding: 1.25rem 1.5rem;
-  }
-
-  .search-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr auto;
-    gap: 10px;
-    align-items: end;
-  }
-
-  .field-group {
-    display: flex;
+  .fp-header {
+    align-items: flex-start;
     flex-direction: column;
-    gap: 5px;
   }
 
-  .field-label {
-    font-size: 11px;
-    font-family: 'DM Mono', monospace;
-    color: var(--color-text-secondary);
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+  .fp-status {
+    width: 100%;
+    justify-content: center;
   }
 
-  .field-group select,
-  .field-group input {
-    height: 38px;
-    padding: 0 10px;
-    border: 0.5px solid var(--color-border-secondary);
-    border-radius: 6px;
-    font-family: 'Syne', sans-serif;
-    font-size: 13px;
-    background: var(--color-background-secondary);
-    color: var(--color-text-primary);
+  .fp-mark {
+    width: 50px;
+    height: 50px;
+  }
+
+  .fp-name {
+    font-size: 27px;
+  }
+
+  .fp-search {
+    padding: 12px;
+  }
+
+  .fp-search-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fp-button {
     width: 100%;
   }
 
-  .field-group select:focus,
-  .field-group input:focus {
-    outline: none;
-    border-color: #1a1a2e;
+  .fp-extra {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
   }
 
-  .btn-buscar {
-    height: 38px;
-    padding: 0 20px;
-    background: #1a1a2e;
-    color: #e8c84a;
-    border: none;
-    border-radius: 6px;
-    font-family: 'Syne', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: opacity 0.15s;
+  .fp-filter-label,
+  .fp-chip,
+  .fp-provider,
+  .fp-switch,
+  .fp-clear {
+    flex: 0 0 auto;
   }
 
-  .btn-buscar:hover { opacity: 0.85; }
-
-  .search-quick {
-    margin-top: 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .quick-label {
-    font-size: 11px;
-    font-family: 'DM Mono', monospace;
-    color: var(--color-text-secondary);
-  }
-
-  .quick-tag {
-    font-size: 11px;
-    padding: 3px 10px;
-    border: 0.5px solid var(--color-border-secondary);
-    border-radius: 20px;
-    cursor: pointer;
-    color: var(--color-text-secondary);
-    background: var(--color-background-secondary);
-    transition: all 0.15s;
-    font-family: 'DM Mono', monospace;
-  }
-
-  .quick-tag:hover {
-    border-color: #1a1a2e;
-    color: var(--color-text-primary);
-  }
-
-  .stats-bar {
-    padding: 0.75rem 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .stats-left {
-    font-size: 12px;
-    color: var(--color-text-secondary);
-    font-family: 'DM Mono', monospace;
-  }
-
-  .stats-left span {
-    color: var(--color-text-primary);
-    font-weight: 500;
-  }
-
-  .view-toggle {
-    display: flex;
-    gap: 4px;
-  }
-
-  .view-btn {
-    width: 28px;
-    height: 28px;
-    border: 0.5px solid var(--color-border-secondary);
-    border-radius: 5px;
-    background: var(--color-background-primary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-text-secondary);
-    font-size: 14px;
-    transition: all 0.15s;
-  }
-
-  .view-btn.active {
-    background: #1a1a2e;
-    color: #e8c84a;
-    border-color: #1a1a2e;
-  }
-
-  .results-container {
-    padding: 0 1.5rem 1.5rem;
-  }
-
-  .result-card {
-    background: var(--color-background-primary);
-    border: 0.5px solid var(--color-border-tertiary);
-    border-radius: 10px;
-    margin-bottom: 8px;
-    overflow: hidden;
-    transition: border-color 0.15s;
-  }
-
-  .result-card:hover {
-    border-color: var(--color-border-secondary);
-  }
-
-  .card-main {
-    padding: 1rem 1.25rem;
-    display: grid;
-    grid-template-columns: auto 1fr auto auto;
-    gap: 16px;
-    align-items: center;
-  }
-
-  .card-provider {
-    display: flex;
+  .fp-results-head {
     flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    min-width: 72px;
+    align-items: flex-start;
   }
 
-  .provider-dot {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 700;
-    font-family: 'DM Mono', monospace;
-    letter-spacing: -0.5px;
+  .fp-summary {
+    justify-content: flex-start;
   }
 
-  .prov-arze { background: #1a1a2e15; color: #1a1a2e; }
-  .prov-comex { background: #0F6E5615; color: #0F6E56; }
-  .prov-tressols { background: #99371d15; color: #993c1d; }
-  .prov-ph { background: #18609015; color: #185fa5; }
-
-  .provider-name {
-    font-size: 10px;
-    font-family: 'DM Mono', monospace;
-    color: var(--color-text-secondary);
-    text-align: center;
+  .fp-card-top {
+    grid-template-columns: 1fr;
+    padding: 15px;
   }
 
-  .card-info {
+  .fp-card h3 {
+    font-size: 17px;
+  }
+
+  .fp-price {
     min-width: 0;
+    text-align: left;
+    padding-top: 12px;
+    border-top: 1px solid var(--fp-line);
   }
 
-  .product-name {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--color-text-primary);
-    margin-bottom: 3px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .fp-stock-table {
+    padding: 0 15px 14px;
   }
 
-  .product-meta {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .meta-chip {
-    font-size: 11px;
-    font-family: 'DM Mono', monospace;
-    color: var(--color-text-secondary);
-    background: var(--color-background-secondary);
-    padding: 2px 7px;
-    border-radius: 4px;
-    border: 0.5px solid var(--color-border-tertiary);
-  }
-
-  .meta-chip.code {
-    color: #185fa5;
-    background: #e6f1fb;
-    border-color: #b5d4f4;
-  }
-
-  .card-compat {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    min-width: 120px;
-  }
-
-  .compat-label {
-    font-size: 10px;
-    font-family: 'DM Mono', monospace;
-    color: var(--color-text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-  }
-
-  .compat-list {
-    font-size: 12px;
-    color: var(--color-text-primary);
-    line-height: 1.5;
-  }
-
-  .card-price-col {
-    text-align: right;
-    min-width: 100px;
-  }
-
-  .price-amount {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    font-family: 'DM Mono', monospace;
-    letter-spacing: -1px;
-  }
-
-  .price-label {
-    font-size: 10px;
-    font-family: 'DM Mono', monospace;
-    color: var(--color-text-secondary);
-    margin-top: 2px;
-  }
-
-  .price-stock {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 11px;
-    font-family: 'DM Mono', monospace;
-    margin-top: 5px;
-  }
-
-  .stock-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-  }
-
-  .stock-ok { background: #639922; color: #3B6D11; }
-  .stock-low { background: #EF9F27; color: #854F0B; }
-  .stock-no { background: #E24B4A; color: #A32D2D; }
-
-  .card-expand {
-    border-top: 0.5px solid var(--color-border-tertiary);
-    padding: 0.75rem 1.25rem;
-    background: var(--color-background-secondary);
+  .fp-stock-head {
     display: none;
   }
 
-  .card-expand.open { display: block; }
-
-  .expand-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+  .fp-stock-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 12px 0;
+    align-items: start;
   }
 
-  .expand-field {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
+  .fp-cell::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 4px;
+    color: var(--fp-muted);
+    font: 500 10px "DM Mono", monospace;
   }
+}
 
-  .expand-key {
-    font-size: 10px;
-    font-family: 'DM Mono', monospace;
-    color: var(--color-text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
+@media (max-width: 380px) {
+  .fp-stock-row {
+    grid-template-columns: 1fr;
   }
-
-  .expand-val {
-    font-size: 13px;
-    color: var(--color-text-primary);
-    font-family: 'DM Mono', monospace;
-  }
-
-  .card-toggle-row {
-    display: flex;
-    justify-content: flex-end;
-    padding: 0 1.25rem 0.5rem;
-  }
-
-  .btn-toggle {
-    font-size: 11px;
-    font-family: 'DM Mono', monospace;
-    color: var(--color-text-secondary);
-    background: none;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 0;
-  }
-
-  .btn-toggle:hover { color: var(--color-text-primary); }
-
-  .empty-state {
-    text-align: center;
-    padding: 3rem 1.5rem;
-    color: var(--color-text-secondary);
-  }
-
-  .empty-icon {
-    font-size: 40px;
-    margin-bottom: 1rem;
-    color: var(--color-border-secondary);
-  }
-
-  .empty-title {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--color-text-primary);
-    margin-bottom: 6px;
-  }
-
-  .empty-sub {
-    font-size: 13px;
-    color: var(--color-text-secondary);
-  }
-
-  .provider-filters {
-    display: flex;
-    gap: 6px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-  }
-
-  .prov-filter {
-    font-size: 11px;
-    padding: 4px 12px;
-    border: 0.5px solid var(--color-border-secondary);
-    border-radius: 20px;
-    cursor: pointer;
-    color: var(--color-text-secondary);
-    background: var(--color-background-secondary);
-    transition: all 0.15s;
-    font-family: 'DM Mono', monospace;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-
-  .prov-filter.active-arze { background: #1a1a2e; color: #e8c84a; border-color: #1a1a2e; }
-  .prov-filter.active-comex { background: #0F6E56; color: #E1F5EE; border-color: #0F6E56; }
-  .prov-filter.active-tressols { background: #993c1d; color: #FAECE7; border-color: #993c1d; }
-  .prov-filter.active-ph { background: #185fa5; color: #E6F1FB; border-color: #185fa5; }
-
-  .count-badge {
-    font-size: 10px;
-    padding: 1px 5px;
-    border-radius: 3px;
-    background: rgba(255,255,255,0.2);
-  }
+}
 </style>
 
-<h2 class="sr-only">Buscador de repuestos electromecánicos Mauri — encontrá el repuesto, código, precio y proveedor disponible</h2>
+<h2 class="sr-only">Buscador responsive de repuestos FixPro con stock por proveedor</h2>
 
-<div class="app">
-  <div class="header">
-    <div class="logo">
-      <div class="logo-icon"><i class="ti ti-bolt" aria-hidden="true"></i></div>
+<div class="fixpro-app">
+  <div class="fp-shell">
+    <header class="fp-header">
+      <div class="fp-brand">
+        <div class="fp-mark" aria-hidden="true"></div>
+        <div>
+          <div class="fp-name"><span>Fix</span><strong>Pro</strong></div>
+          <div class="fp-sub">Soluciones rápidas y confiables</div>
+        </div>
+      </div>
+      <div class="fp-status">Stock por proveedor</div>
+    </header>
+
+    <section class="fp-panel fp-search">
+      <form id="fp-form">
+        <div class="fp-search-grid">
+          <label class="fp-field">
+            <span>Categoría</span>
+            <select id="fp-cat">
+              <option value="">Todas</option>
+              <option value="alternador">Alternadores</option>
+              <option value="motor-arranque">Motor de arranque</option>
+              <option value="regulador">Reguladores</option>
+              <option value="inducido">Inducidos</option>
+              <option value="bobina">Bobinas</option>
+              <option value="solenoide">Solenoides</option>
+            </select>
+          </label>
+
+          <label class="fp-field">
+            <span>Marca</span>
+            <select id="fp-marca">
+              <option value="">Todas</option>
+              <option value="Ford">Ford</option>
+              <option value="Volkswagen">Volkswagen</option>
+              <option value="Renault">Renault</option>
+              <option value="Chevrolet">Chevrolet</option>
+              <option value="Toyota">Toyota</option>
+              <option value="Fiat">Fiat</option>
+              <option value="Peugeot">Peugeot</option>
+            </select>
+          </label>
+
+          <label class="fp-field">
+            <span>Modelo</span>
+            <select id="fp-modelo" disabled>
+              <option value="">Todos</option>
+            </select>
+          </label>
+
+          <label class="fp-field">
+            <span>Código o nombre</span>
+            <input id="fp-texto" type="search" placeholder="ALT-0012, regulador, Hilux..." autocomplete="off">
+          </label>
+
+          <button class="fp-button" type="submit">Buscar</button>
+        </div>
+
+        <div class="fp-extra">
+          <span class="fp-filter-label">Rápidas</span>
+          <button class="fp-chip" type="button" data-cat="alternador" data-marca="Ford">Alternadores Ford</button>
+          <button class="fp-chip" type="button" data-cat="regulador">Reguladores</button>
+          <button class="fp-chip" type="button" data-cat="motor-arranque" data-marca="Volkswagen">Arranque VW</button>
+          <button class="fp-chip" type="button" data-marca="Toyota">Todo Toyota</button>
+          <button class="fp-chip" type="button" data-cat="bobina">Bobinas</button>
+        </div>
+
+        <div class="fp-extra" id="fp-proveedores"></div>
+
+        <div class="fp-extra">
+          <label class="fp-switch">
+            <input id="fp-solo-stock" type="checkbox">
+            Solo con stock
+          </label>
+          <button class="fp-clear" id="fp-limpiar" type="button">Limpiar filtros</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="fp-results-head" aria-live="polite">
       <div>
-        <div class="logo-text">RepuestosMauri</div>
-        <div class="logo-sub">ELECTROMECÁNICA AUTOMOTRIZ</div>
+        <div class="fp-results-title" id="fp-title">Repuestos disponibles</div>
+        <div class="fp-results-sub" id="fp-subtitle">Mostrando inventario completo</div>
       </div>
-    </div>
-    <div class="badge-demo">DEMO — datos de ejemplo</div>
+      <div class="fp-summary">
+        <span id="fp-count">0 repuestos</span>
+        <span id="fp-units">0 unidades</span>
+      </div>
+    </section>
+
+    <main class="fp-list" id="fp-results"></main>
   </div>
-
-  <div class="search-section">
-    <div class="search-row">
-      <div class="field-group">
-        <span class="field-label">Categoría</span>
-        <select id="sel-cat">
-          <option value="">Todas</option>
-          <option value="alternador">Alternadores</option>
-          <option value="motor-arranque">Motor de arranque</option>
-          <option value="regulador">Reguladores</option>
-          <option value="inducido">Inducidos</option>
-          <option value="bobina">Bobinas</option>
-          <option value="solenoide">Solenoides</option>
-        </select>
-      </div>
-      <div class="field-group">
-        <span class="field-label">Marca vehículo</span>
-        <select id="sel-marca">
-          <option value="">Todas</option>
-          <option value="Ford">Ford</option>
-          <option value="Volkswagen">Volkswagen</option>
-          <option value="Renault">Renault</option>
-          <option value="Chevrolet">Chevrolet</option>
-          <option value="Toyota">Toyota</option>
-          <option value="Fiat">Fiat</option>
-          <option value="Peugeot">Peugeot</option>
-        </select>
-      </div>
-      <div class="field-group">
-        <span class="field-label">Modelo</span>
-        <select id="sel-modelo">
-          <option value="">Todos</option>
-        </select>
-      </div>
-      <div class="field-group">
-        <span class="field-label">Buscar por código / nombre</span>
-        <input type="text" id="inp-texto" placeholder="Ej: ALT-0012 o regulador..." />
-      </div>
-      <button class="btn-buscar" onclick="buscar()">
-        <i class="ti ti-search" aria-hidden="true"></i> Buscar
-      </button>
-    </div>
-
-    <div class="search-quick">
-      <span class="quick-label">Búsquedas rápidas:</span>
-      <span class="quick-tag" onclick="buscarRapido('alternador','Ford','')">Alternadores Ford</span>
-      <span class="quick-tag" onclick="buscarRapido('regulador','','')">Reguladores</span>
-      <span class="quick-tag" onclick="buscarRapido('motor-arranque','Volkswagen','')">Arranque VW</span>
-      <span class="quick-tag" onclick="buscarRapido('','Toyota','')">Todo Toyota</span>
-      <span class="quick-tag" onclick="buscarRapido('bobina','','')">Bobinas</span>
-    </div>
-
-    <div class="provider-filters" id="prov-filters">
-      <span class="quick-label" style="line-height:28px;">Proveedor:</span>
-    </div>
-  </div>
-
-  <div class="stats-bar">
-    <div class="stats-left" id="stats-text">Mostrando <span id="count-shown">0</span> resultados</div>
-    <div class="view-toggle">
-      <button class="view-btn active" title="Lista" onclick="setView('list',this)"><i class="ti ti-list" aria-hidden="true"></i></button>
-      <button class="view-btn" title="Compacto" onclick="setView('compact',this)"><i class="ti ti-layout-rows" aria-hidden="true"></i></button>
-    </div>
-  </div>
-
-  <div class="results-container" id="results"></div>
 </div>
 
 <script>
-const modelos = {
-  Ford: ['Falcon', 'F-100', 'Focus', 'Ecosport', 'Ranger', 'Ka', 'Fiesta'],
-  Volkswagen: ['Gol', 'Golf', 'Polo', 'Amarok', 'Saveiro', 'Suran'],
-  Renault: ['Megane', 'Logan', 'Sandero', 'Kangoo', 'Duster', 'Clio'],
-  Chevrolet: ['Corsa', 'Astra', 'Cruze', 'S10', 'Tracker', 'Spin'],
-  Toyota: ['Hilux', 'Corolla', 'Etios', 'SW4', 'Land Cruiser'],
-  Fiat: ['Uno', 'Palio', 'Siena', 'Strada', 'Punto', 'Toro'],
-  Peugeot: ['206', '207', '307', '308', '408', 'Partner']
-};
+(() => {
+  const modelos = {
+    Ford: ['Falcon', 'F-100', 'Focus', 'Ecosport', 'Ranger', 'Ka', 'Fiesta'],
+    Volkswagen: ['Gol', 'Golf', 'Polo', 'Amarok', 'Saveiro', 'Suran'],
+    Renault: ['Megane', 'Logan', 'Sandero', 'Kangoo', 'Duster', 'Clio'],
+    Chevrolet: ['Corsa', 'Astra', 'Cruze', 'S10', 'Tracker', 'Spin'],
+    Toyota: ['Hilux', 'Corolla', 'Etios', 'SW4', 'Land Cruiser'],
+    Fiat: ['Uno', 'Palio', 'Siena', 'Strada', 'Punto', 'Toro'],
+    Peugeot: ['206', '207', '307', '308', '408', 'Partner']
+  };
 
-const PRODUCTOS = [
-  { id:1, nombre:'Alternador 14V 90A', categoria:'alternador', codigo:'ALT-A0091', codigoOrig:'0986042830', marca:'Ford', modelos:['Falcon','Ranger','F-100'], año:'1998-2012', voltaje:'14V', amp:'90A', proveedor:'arze', precio:42500, stock:'ok' },
-  { id:2, nombre:'Alternador 14V 90A', categoria:'alternador', codigo:'ALT-C0091', codigoOrig:'0986042830', marca:'Ford', modelos:['Falcon','Ranger'], año:'1998-2012', voltaje:'14V', amp:'90A', proveedor:'comex', precio:39800, stock:'ok' },
-  { id:3, nombre:'Alternador 14V 65A', categoria:'alternador', codigo:'ALT-T0065', codigoOrig:'7700101488', marca:'Renault', modelos:['Megane','Logan','Kangoo'], año:'2000-2015', voltaje:'14V', amp:'65A', proveedor:'tressols', precio:35200, stock:'low' },
-  { id:4, nombre:'Alternador 14V 70A', categoria:'alternador', codigo:'ALT-P0070', codigoOrig:'4338056', marca:'Volkswagen', modelos:['Gol','Polo','Saveiro'], año:'2001-2016', voltaje:'14V', amp:'70A', proveedor:'ph', precio:37900, stock:'ok' },
-  { id:5, nombre:'Motor de arranque 12V 1.1kW', categoria:'motor-arranque', codigo:'MAR-A0011', codigoOrig:'0001107406', marca:'Volkswagen', modelos:['Gol','Golf','Suran'], año:'2003-2018', voltaje:'12V', amp:'1.1kW', proveedor:'arze', precio:28700, stock:'ok' },
-  { id:6, nombre:'Motor de arranque 12V 1.1kW', categoria:'motor-arranque', codigo:'MAR-C0011', codigoOrig:'0001107406', marca:'Volkswagen', modelos:['Gol','Golf'], año:'2003-2018', voltaje:'12V', amp:'1.1kW', proveedor:'comex', precio:26500, stock:'ok' },
-  { id:7, nombre:'Motor de arranque 12V 0.9kW', categoria:'motor-arranque', codigo:'MAR-T0009', codigoOrig:'6001547612', marca:'Renault', modelos:['Clio','Logan','Sandero'], año:'2005-2020', voltaje:'12V', amp:'0.9kW', proveedor:'tressols', precio:24900, stock:'ok' },
-  { id:8, nombre:'Regulador de voltaje interno', categoria:'regulador', codigo:'REG-A0022', codigoOrig:'F00M144123', marca:'Ford', modelos:['Focus','Ka','Fiesta'], año:'2002-2014', voltaje:'14.4V', amp:'—', proveedor:'arze', precio:8900, stock:'ok' },
-  { id:9, nombre:'Regulador de voltaje externo', categoria:'regulador', codigo:'REG-C0031', codigoOrig:'1197311212', marca:'Volkswagen', modelos:['Amarok','Golf'], año:'2010-2022', voltaje:'14.4V', amp:'—', proveedor:'comex', precio:11200, stock:'low' },
-  { id:10, nombre:'Regulador de voltaje interno', categoria:'regulador', codigo:'REG-T0019', codigoOrig:'F00M144087', marca:'Chevrolet', modelos:['Corsa','Astra'], año:'1998-2010', voltaje:'14.4V', amp:'—', proveedor:'tressols', precio:7600, stock:'ok' },
-  { id:11, nombre:'Inducido 12V para arranque', categoria:'inducido', codigo:'IND-A0044', codigoOrig:'9000082080', marca:'Toyota', modelos:['Hilux','Land Cruiser'], año:'2005-2021', voltaje:'12V', amp:'—', proveedor:'arze', precio:18400, stock:'ok' },
-  { id:12, nombre:'Bobina de encendido', categoria:'bobina', codigo:'BOB-P0012', codigoOrig:'597065', marca:'Peugeot', modelos:['206','207','307'], año:'2000-2013', voltaje:'12V', amp:'—', proveedor:'ph', precio:14200, stock:'ok' },
-  { id:13, nombre:'Solenoide para arranque', categoria:'solenoide', codigo:'SOL-A0008', codigoOrig:'0331303104', marca:'Chevrolet', modelos:['S10','Tracker'], año:'2004-2019', voltaje:'12V', amp:'—', proveedor:'arze', precio:9800, stock:'low' },
-  { id:14, nombre:'Alternador 14V 120A', categoria:'alternador', codigo:'ALT-A0120', codigoOrig:'7519322', marca:'Toyota', modelos:['Hilux','SW4'], año:'2010-2023', voltaje:'14V', amp:'120A', proveedor:'arze', precio:58900, stock:'ok' },
-  { id:15, nombre:'Alternador 14V 120A', categoria:'alternador', codigo:'ALT-T0120', codigoOrig:'7519322', marca:'Toyota', modelos:['Hilux'], año:'2010-2023', voltaje:'14V', amp:'120A', proveedor:'tressols', precio:55400, stock:'ok' },
-];
+  const CATEGORIAS = {
+    'alternador': 'Alternador',
+    'motor-arranque': 'Motor de arranque',
+    'regulador': 'Regulador',
+    'inducido': 'Inducido',
+    'bobina': 'Bobina',
+    'solenoide': 'Solenoide'
+  };
 
-const PROVEEDORES = {
-  arze: { nombre:'ARZE', color:'prov-arze', filtro:'active-arze' },
-  comex: { nombre:'COMEX', color:'prov-comex', filtro:'active-comex' },
-  tressols: { nombre:'TRESSOLS', color:'prov-tressols', filtro:'active-tressols' },
-  ph: { nombre:'E.PH', color:'prov-ph', filtro:'active-ph' }
-};
+  const PROVEEDORES = {
+    arze: { nombre: 'ARZE' },
+    comex: { nombre: 'COMEX' },
+    tressols: { nombre: 'TRESSOLS' },
+    ph: { nombre: 'E.PH' }
+  };
 
-let provFiltros = { arze:true, comex:true, tressols:true, ph:true };
-let viewMode = 'list';
-let resultadosActuales = [...PRODUCTOS];
-
-function initProvFilters() {
-  const c = document.getElementById('prov-filters');
-  Object.entries(PROVEEDORES).forEach(([k,v]) => {
-    const btn = document.createElement('button');
-    btn.className = 'prov-filter ' + v.filtro;
-    btn.id = 'pf-' + k;
-    btn.innerHTML = v.nombre + '<span class="count-badge" id="pfc-'+k+'">'+PRODUCTOS.filter(p=>p.proveedor===k).length+'</span>';
-    btn.onclick = () => toggleProv(k);
-    c.appendChild(btn);
-  });
-}
-
-function toggleProv(k) {
-  provFiltros[k] = !provFiltros[k];
-  const btn = document.getElementById('pf-' + k);
-  if (provFiltros[k]) btn.className = 'prov-filter ' + PROVEEDORES[k].filtro;
-  else btn.className = 'prov-filter';
-  buscar();
-}
-
-document.getElementById('sel-marca').addEventListener('change', function() {
-  const m = this.value;
-  const sel = document.getElementById('sel-modelo');
-  sel.innerHTML = '<option value="">Todos</option>';
-  if (m && modelos[m]) {
-    modelos[m].forEach(mo => {
-      const o = document.createElement('option');
-      o.value = mo; o.textContent = mo;
-      sel.appendChild(o);
-    });
-  }
-});
-
-function buscarRapido(cat, marca, modelo) {
-  document.getElementById('sel-cat').value = cat;
-  document.getElementById('sel-marca').value = marca;
-  if (marca && modelos[marca]) {
-    const sel = document.getElementById('sel-modelo');
-    sel.innerHTML = '<option value="">Todos</option>';
-    modelos[marca].forEach(mo => {
-      const o = document.createElement('option');
-      o.value = mo; o.textContent = mo;
-      sel.appendChild(o);
-    });
-  }
-  document.getElementById('sel-modelo').value = modelo;
-  document.getElementById('inp-texto').value = '';
-  buscar();
-}
-
-function buscar() {
-  const cat = document.getElementById('sel-cat').value;
-  const marca = document.getElementById('sel-marca').value;
-  const modelo = document.getElementById('sel-modelo').value;
-  const texto = document.getElementById('inp-texto').value.toLowerCase().trim();
-
-  resultadosActuales = PRODUCTOS.filter(p => {
-    if (!provFiltros[p.proveedor]) return false;
-    if (cat && p.categoria !== cat) return false;
-    if (marca && p.marca !== marca) return false;
-    if (modelo && !p.modelos.includes(modelo)) return false;
-    if (texto && !p.nombre.toLowerCase().includes(texto) && !p.codigo.toLowerCase().includes(texto) && !p.codigoOrig.toLowerCase().includes(texto)) return false;
-    return true;
+  const oferta = (proveedor, codigo, codigoOrig, precio, stock) => ({
+    proveedor, codigo, codigoOrig, precio, stock
   });
 
-  renderResultados();
-}
-
-function renderResultados() {
-  const c = document.getElementById('results');
-  document.getElementById('count-shown').textContent = resultadosActuales.length;
-
-  if (resultadosActuales.length === 0) {
-    c.innerHTML = '<div class="empty-state"><div class="empty-icon"><i class="ti ti-search-off" aria-hidden="true"></i></div><div class="empty-title">Sin resultados</div><div class="empty-sub">Probá cambiando los filtros o la búsqueda</div></div>';
-    return;
-  }
-
-  c.innerHTML = resultadosActuales.map(p => {
-    const pv = PROVEEDORES[p.proveedor];
-    const stockInfo = p.stock === 'ok' ? ['stock-ok','Disponible'] : p.stock === 'low' ? ['stock-low','Último stock'] : ['stock-no','Sin stock'];
-    const precioFmt = '$' + p.precio.toLocaleString('es-AR');
-
-    if (viewMode === 'compact') {
-      return `<div class="result-card">
-        <div class="card-main" style="padding:0.6rem 1.25rem;grid-template-columns:60px 1fr 140px 90px;">
-          <div class="card-provider">
-            <div class="provider-dot ${pv.color}">${pv.nombre}</div>
-          </div>
-          <div class="card-info">
-            <div class="product-name" style="font-size:13px;">${p.nombre}</div>
-            <div class="product-meta">
-              <span class="meta-chip code">${p.codigo}</span>
-              <span class="meta-chip">${p.marca} · ${p.modelos[0]}${p.modelos.length>1?'...':''}</span>
-            </div>
-          </div>
-          <div style="font-size:11px;color:var(--color-text-secondary);font-family:'DM Mono',monospace;">${p.año}</div>
-          <div class="card-price-col">
-            <div class="price-amount" style="font-size:16px;">${precioFmt}</div>
-            <div class="price-stock ${stockInfo[0]}" style="display:flex;align-items:center;gap:3px;justify-content:flex-end;font-size:10px;margin-top:3px;font-family:'DM Mono',monospace;">
-              <span class="stock-dot ${stockInfo[0]}"></span>${stockInfo[1]}
-            </div>
-          </div>
-        </div>
-      </div>`;
+  const PRODUCTOS = [
+    {
+      id: 1, nombre: 'Alternador 14V 90A', categoria: 'alternador', marca: 'Ford',
+      modelos: ['Falcon', 'Ranger', 'F-100'], anio: '1998-2012', voltaje: '14V', potencia: '90A',
+      ofertas: [
+        oferta('arze', 'ALT-A0091', '0986042830', 42500, 6),
+        oferta('comex', 'ALT-C0091', '0986042830', 39800, 8),
+        oferta('tressols', 'ALT-T0091', '0986042830', 41200, 2),
+        oferta('ph', 'ALT-P0091', '0986042830', 43900, 0)
+      ]
+    },
+    {
+      id: 2, nombre: 'Alternador 14V 65A', categoria: 'alternador', marca: 'Renault',
+      modelos: ['Megane', 'Logan', 'Kangoo'], anio: '2000-2015', voltaje: '14V', potencia: '65A',
+      ofertas: [
+        oferta('arze', 'ALT-A0065', '7700101488', 36600, 0),
+        oferta('comex', 'ALT-C0065', '7700101488', 34800, 3),
+        oferta('tressols', 'ALT-T0065', '7700101488', 35200, 1),
+        oferta('ph', 'ALT-P0065', '7700101488', 37100, 4)
+      ]
+    },
+    {
+      id: 3, nombre: 'Alternador 14V 70A', categoria: 'alternador', marca: 'Volkswagen',
+      modelos: ['Gol', 'Polo', 'Saveiro'], anio: '2001-2016', voltaje: '14V', potencia: '70A',
+      ofertas: [
+        oferta('arze', 'ALT-A0070', '4338056', 38600, 5),
+        oferta('comex', 'ALT-C0070', '4338056', 36900, 0),
+        oferta('tressols', 'ALT-T0070', '4338056', 38100, 2),
+        oferta('ph', 'ALT-P0070', '4338056', 37900, 7)
+      ]
+    },
+    {
+      id: 4, nombre: 'Motor de arranque 12V 1.1kW', categoria: 'motor-arranque', marca: 'Volkswagen',
+      modelos: ['Gol', 'Golf', 'Suran'], anio: '2003-2018', voltaje: '12V', potencia: '1.1kW',
+      ofertas: [
+        oferta('arze', 'MAR-A0011', '0001107406', 28700, 9),
+        oferta('comex', 'MAR-C0011', '0001107406', 26500, 4),
+        oferta('tressols', 'MAR-T0011', '0001107406', 27900, 0),
+        oferta('ph', 'MAR-P0011', '0001107406', 29600, 2)
+      ]
+    },
+    {
+      id: 5, nombre: 'Motor de arranque 12V 0.9kW', categoria: 'motor-arranque', marca: 'Renault',
+      modelos: ['Clio', 'Logan', 'Sandero'], anio: '2005-2020', voltaje: '12V', potencia: '0.9kW',
+      ofertas: [
+        oferta('arze', 'MAR-A0009', '6001547612', 25700, 3),
+        oferta('comex', 'MAR-C0009', '6001547612', 24100, 0),
+        oferta('tressols', 'MAR-T0009', '6001547612', 24900, 6),
+        oferta('ph', 'MAR-P0009', '6001547612', 26300, 2)
+      ]
+    },
+    {
+      id: 6, nombre: 'Regulador de voltaje interno', categoria: 'regulador', marca: 'Ford',
+      modelos: ['Focus', 'Ka', 'Fiesta'], anio: '2002-2014', voltaje: '14.4V', potencia: '-',
+      ofertas: [
+        oferta('arze', 'REG-A0022', 'F00M144123', 8900, 11),
+        oferta('comex', 'REG-C0022', 'F00M144123', 8400, 3),
+        oferta('tressols', 'REG-T0022', 'F00M144123', 8700, 0),
+        oferta('ph', 'REG-P0022', 'F00M144123', 9100, 5)
+      ]
+    },
+    {
+      id: 7, nombre: 'Regulador de voltaje externo', categoria: 'regulador', marca: 'Volkswagen',
+      modelos: ['Amarok', 'Golf'], anio: '2010-2022', voltaje: '14.4V', potencia: '-',
+      ofertas: [
+        oferta('arze', 'REG-A0031', '1197311212', 11600, 2),
+        oferta('comex', 'REG-C0031', '1197311212', 11200, 1),
+        oferta('tressols', 'REG-T0031', '1197311212', 11900, 0),
+        oferta('ph', 'REG-P0031', '1197311212', 12100, 4)
+      ]
+    },
+    {
+      id: 8, nombre: 'Regulador de voltaje interno', categoria: 'regulador', marca: 'Chevrolet',
+      modelos: ['Corsa', 'Astra'], anio: '1998-2010', voltaje: '14.4V', potencia: '-',
+      ofertas: [
+        oferta('arze', 'REG-A0019', 'F00M144087', 7900, 8),
+        oferta('comex', 'REG-C0019', 'F00M144087', 7350, 0),
+        oferta('tressols', 'REG-T0019', 'F00M144087', 7600, 6),
+        oferta('ph', 'REG-P0019', 'F00M144087', 8100, 2)
+      ]
+    },
+    {
+      id: 9, nombre: 'Inducido 12V para arranque', categoria: 'inducido', marca: 'Toyota',
+      modelos: ['Hilux', 'Land Cruiser'], anio: '2005-2021', voltaje: '12V', potencia: '-',
+      ofertas: [
+        oferta('arze', 'IND-A0044', '9000082080', 18400, 5),
+        oferta('comex', 'IND-C0044', '9000082080', 17600, 3),
+        oferta('tressols', 'IND-T0044', '9000082080', 18900, 1),
+        oferta('ph', 'IND-P0044', '9000082080', 19400, 0)
+      ]
+    },
+    {
+      id: 10, nombre: 'Bobina de encendido', categoria: 'bobina', marca: 'Peugeot',
+      modelos: ['206', '207', '307'], anio: '2000-2013', voltaje: '12V', potencia: '-',
+      ofertas: [
+        oferta('arze', 'BOB-A0012', '597065', 14900, 0),
+        oferta('comex', 'BOB-C0012', '597065', 13700, 2),
+        oferta('tressols', 'BOB-T0012', '597065', 14500, 1),
+        oferta('ph', 'BOB-P0012', '597065', 14200, 7)
+      ]
+    },
+    {
+      id: 11, nombre: 'Solenoide para arranque', categoria: 'solenoide', marca: 'Chevrolet',
+      modelos: ['S10', 'Tracker'], anio: '2004-2019', voltaje: '12V', potencia: '-',
+      ofertas: [
+        oferta('arze', 'SOL-A0008', '0331303104', 9800, 2),
+        oferta('comex', 'SOL-C0008', '0331303104', 9300, 0),
+        oferta('tressols', 'SOL-T0008', '0331303104', 10100, 3),
+        oferta('ph', 'SOL-P0008', '0331303104', 10400, 1)
+      ]
+    },
+    {
+      id: 12, nombre: 'Alternador 14V 120A', categoria: 'alternador', marca: 'Toyota',
+      modelos: ['Hilux', 'SW4'], anio: '2010-2023', voltaje: '14V', potencia: '120A',
+      ofertas: [
+        oferta('arze', 'ALT-A0120', '7519322', 58900, 4),
+        oferta('comex', 'ALT-C0120', '7519322', 56800, 0),
+        oferta('tressols', 'ALT-T0120', '7519322', 55400, 3),
+        oferta('ph', 'ALT-P0120', '7519322', 60100, 1)
+      ]
     }
+  ];
 
-    return `<div class="result-card" id="card-${p.id}">
-      <div class="card-main">
-        <div class="card-provider">
-          <div class="provider-dot ${pv.color}">${pv.nombre}</div>
-          <div class="provider-name">${pv.nombre}</div>
-        </div>
-        <div class="card-info">
-          <div class="product-name">${p.nombre}</div>
-          <div class="product-meta">
-            <span class="meta-chip code"><i class="ti ti-barcode" style="font-size:11px;vertical-align:-1px;" aria-hidden="true"></i> ${p.codigo}</span>
-            <span class="meta-chip">${p.marca}</span>
-            <span class="meta-chip">${p.modelos.join(' · ')}</span>
-            <span class="meta-chip">${p.año}</span>
-          </div>
-        </div>
-        <div class="card-compat">
-          <span class="compat-label">Cód. original</span>
-          <span class="compat-list" style="font-family:'DM Mono',monospace;font-size:12px;">${p.codigoOrig}</span>
-        </div>
-        <div class="card-price-col">
-          <div class="price-amount">${precioFmt}</div>
-          <div class="price-label">precio lista</div>
-          <div class="price-stock ${stockInfo[0]}" style="display:flex;align-items:center;gap:4px;justify-content:flex-end;margin-top:5px;font-family:'DM Mono',monospace;font-size:11px;">
-            <span class="stock-dot ${stockInfo[0]}"></span>${stockInfo[1]}
-          </div>
-        </div>
-      </div>
-      <div class="card-toggle-row">
-        <button class="btn-toggle" onclick="toggleExpand(${p.id})">
-          <i class="ti ti-chevron-down" id="ico-${p.id}" aria-hidden="true"></i> ver detalle
-        </button>
-      </div>
-      <div class="card-expand" id="exp-${p.id}">
-        <div class="expand-grid">
-          <div class="expand-field"><span class="expand-key">Voltaje</span><span class="expand-val">${p.voltaje}</span></div>
-          <div class="expand-field"><span class="expand-key">Amperaje</span><span class="expand-val">${p.amp}</span></div>
-          <div class="expand-field"><span class="expand-key">Proveedor</span><span class="expand-val">${pv.nombre}</span></div>
-          <div class="expand-field"><span class="expand-key">Stock</span><span class="expand-val">${stockInfo[1]}</span></div>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
+  const $ = (id) => document.getElementById(id);
+  const proveedorKeys = Object.keys(PROVEEDORES);
+  const activos = new Set(proveedorKeys);
 
-function toggleExpand(id) {
-  const exp = document.getElementById('exp-' + id);
-  const ico = document.getElementById('ico-' + id);
-  if (exp.classList.contains('open')) {
-    exp.classList.remove('open');
-    ico.style.transform = '';
-  } else {
-    exp.classList.add('open');
-    ico.style.transform = 'rotate(180deg)';
+  const money = new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: 'ARS',
+    maximumFractionDigits: 0
+  });
+
+  function esc(value) {
+    return String(value ?? '').replace(/[&<>"']/g, (c) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
   }
-}
 
-function setView(mode, btn) {
-  viewMode = mode;
-  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderResultados();
-}
+  function normalizar(value) {
+    return String(value ?? '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
 
-initProvFilters();
-buscar();
+  function totalProveedor(key) {
+    return PRODUCTOS.reduce((sum, p) => {
+      return sum + p.ofertas.filter(o => o.proveedor === key).reduce((a, o) => a + o.stock, 0);
+    }, 0);
+  }
+
+  function renderProveedores() {
+    $('fp-proveedores').innerHTML = `
+      <span class="fp-filter-label">Proveedor</span>
+      ${proveedorKeys.map(key => `
+        <button class="fp-provider is-active" type="button" data-provider="${key}" aria-pressed="true">
+          ${PROVEEDORES[key].nombre}
+          <small>${totalProveedor(key)} u.</small>
+        </button>
+      `).join('')}
+    `;
+
+    document.querySelectorAll('.fp-provider').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.provider;
+        activos.has(key) ? activos.delete(key) : activos.add(key);
+        if (activos.size === 0) activos.add(key);
+        actualizarProveedores();
+        render();
+      });
+    });
+  }
+
+  function actualizarProveedores() {
+    document.querySelectorAll('.fp-provider').forEach(btn => {
+      const isActive = activos.has(btn.dataset.provider);
+      btn.classList.toggle('is-active', isActive);
+      btn.setAttribute('aria-pressed', String(isActive));
+    });
+  }
+
+  function renderModelos(marca) {
+    const select = $('fp-modelo');
+    select.innerHTML = '<option value="">Todos</option>';
+    select.disabled = !marca;
+
+    if (!marca || !modelos[marca]) return;
+
+    modelos[marca].forEach(modelo => {
+      const option = document.createElement('option');
+      option.value = modelo;
+      option.textContent = modelo;
+      select.appendChild(option);
+    });
+  }
+
+  function stockClass(stock) {
+    if (stock <= 0) return ['none', 'Sin stock'];
+    if (stock <= 2) return ['low', `${stock} u. bajo`];
+    return ['ok', `${stock} unidades`];
+  }
+
+  function filtrar() {
+    const cat = $('fp-cat').value;
+    const marca = $('fp-marca').value;
+    const modelo = $('fp-modelo').value;
+    const texto = normalizar($('fp-texto').value.trim());
+    const soloStock = $('fp-solo-stock').checked;
+
+    return PRODUCTOS.map(producto => {
+      let ofertas = producto.ofertas.filter(o => activos.has(o.proveedor));
+      if (soloStock) ofertas = ofertas.filter(o => o.stock > 0);
+      if (!ofertas.length) return null;
+
+      if (cat && producto.categoria !== cat) return null;
+      if (marca && producto.marca !== marca) return null;
+      if (modelo && !producto.modelos.includes(modelo)) return null;
+
+      if (texto) {
+        const base = normalizar([
+          producto.nombre, producto.marca, producto.modelos.join(' '), producto.anio,
+          producto.voltaje, producto.potencia, CATEGORIAS[producto.categoria]
+        ].join(' '));
+
+        const codigos = normalizar(ofertas.map(o => [
+          o.codigo, o.codigoOrig, PROVEEDORES[o.proveedor].nombre
+        ].join(' ')).join(' '));
+
+        if (!base.includes(texto) && !codigos.includes(texto)) return null;
+      }
+
+      ofertas.sort((a, b) => Number(b.stock > 0) - Number(a.stock > 0) || a.precio - b.precio);
+      return { ...producto, ofertas };
+    }).filter(Boolean).sort((a, b) => {
+      const stockA = a.ofertas.reduce((s, o) => s + o.stock, 0);
+      const stockB = b.ofertas.reduce((s, o) => s + o.stock, 0);
+      return Number(stockB > 0) - Number(stockA > 0) || a.nombre.localeCompare(b.nombre);
+    });
+  }
+
+  function renderOferta(of) {
+    const prov = PROVEEDORES[of.proveedor];
+    const [clase, label] = stockClass(of.stock);
+
+    return `
+      <div class="fp-stock-row">
+        <div class="fp-cell" data-label="Proveedor">
+          <span class="fp-supplier ${of.proveedor}">${esc(prov.nombre)}</span>
+        </div>
+        <div class="fp-cell fp-mono" data-label="Código">${esc(of.codigo)}</div>
+        <div class="fp-cell fp-mono" data-label="Original">${esc(of.codigoOrig)}</div>
+        <div class="fp-cell" data-label="Stock">
+          <span class="fp-stock-pill ${clase}">${esc(label)}</span>
+        </div>
+        <div class="fp-cell fp-mono" data-label="Precio">${money.format(of.precio)}</div>
+      </div>
+    `;
+  }
+
+  function renderCard(producto) {
+    const totalStock = producto.ofertas.reduce((sum, o) => sum + o.stock, 0);
+    const mejor = producto.ofertas.filter(o => o.stock > 0).sort((a, b) => a.precio - b.precio)[0];
+    const mejorProveedor = mejor ? PROVEEDORES[mejor.proveedor].nombre : 'Consultar';
+
+    return `
+      <article class="fp-card">
+        <div class="fp-card-top">
+          <div>
+            <div class="fp-kicker">${esc(CATEGORIAS[producto.categoria])} / ${esc(producto.marca)}</div>
+            <h3>${esc(producto.nombre)}</h3>
+            <div class="fp-tags">
+              <span class="fp-tag">${esc(producto.modelos.join(' · '))}</span>
+              <span class="fp-tag">${esc(producto.anio)}</span>
+              <span class="fp-tag">${esc(producto.voltaje)}</span>
+              <span class="fp-tag">${esc(producto.potencia)}</span>
+              <span class="fp-tag">${totalStock} u. total</span>
+            </div>
+          </div>
+          <div class="fp-price">
+            <span>Mejor precio con stock</span>
+            <strong>${mejor ? money.format(mejor.precio) : 'Sin stock'}</strong>
+            <small>${esc(mejorProveedor)}</small>
+          </div>
+        </div>
+
+        <div class="fp-stock-table">
+          <div class="fp-stock-head">
+            <div>Proveedor</div>
+            <div>Código</div>
+            <div>Cód. original</div>
+            <div>Stock</div>
+            <div>Precio</div>
+          </div>
+          ${producto.ofertas.map(renderOferta).join('')}
+        </div>
+      </article>
+    `;
+  }
+
+  function render() {
+    const resultados = filtrar();
+    const unidades = resultados.reduce((sum, p) => sum + p.ofertas.reduce((a, o) => a + o.stock, 0), 0);
+
+    $('fp-count').textContent = `${resultados.length} repuestos`;
+    $('fp-units').textContent = `${unidades} unidades`;
+    $('fp-subtitle').textContent = resultados.length
+      ? 'Mostrando stock visible según filtros activos'
+      : 'No hay coincidencias con esos filtros';
+
+    $('fp-results').innerHTML = resultados.length
+      ? resultados.map(renderCard).join('')
+      : `<div class="fp-panel fp-empty"><strong>Sin resultados</strong>Probá cambiando proveedor, modelo o texto de búsqueda.</div>`;
+  }
+
+  $('fp-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    render();
+  });
+
+  $('fp-marca').addEventListener('change', () => {
+    renderModelos($('fp-marca').value);
+    $('fp-modelo').value = '';
+    render();
+  });
+
+  ['fp-cat', 'fp-modelo', 'fp-solo-stock'].forEach(id => {
+    $(id).addEventListener('change', render);
+  });
+
+  $('fp-texto').addEventListener('input', render);
+
+  document.querySelectorAll('.fp-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $('fp-cat').value = btn.dataset.cat || '';
+      $('fp-marca').value = btn.dataset.marca || '';
+      $('fp-texto').value = '';
+      renderModelos($('fp-marca').value);
+      $('fp-modelo').value = '';
+      render();
+    });
+  });
+
+  $('fp-limpiar').addEventListener('click', () => {
+    $('fp-cat').value = '';
+    $('fp-marca').value = '';
+    $('fp-texto').value = '';
+    $('fp-solo-stock').checked = false;
+    renderModelos('');
+    $('fp-modelo').value = '';
+    activos.clear();
+    proveedorKeys.forEach(key => activos.add(key));
+    actualizarProveedores();
+    render();
+  });
+
+  renderProveedores();
+  render();
+})();
 </script>
+```
