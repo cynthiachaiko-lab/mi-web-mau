@@ -1,1086 +1,1353 @@
-```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mauri Repuestos — Electromecánica Automotriz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
-
+/* ====================================================
+   VARIABLES & RESET
+==================================================== */
 :root {
-  --fp-blue: #004b93;
-  --fp-blue-dark: #00366f;
-  --fp-orange: #ff6a00;
-  --fp-red: #d72f13;
-  --fp-ink: #172033;
-  --fp-muted: #687385;
-  --fp-line: #dfe6ee;
-  --fp-soft: #f4f7fb;
-  --fp-white: #ffffff;
-  --fp-ok: #14834f;
-  --fp-warn: #b96b00;
-  --fp-no: #b3342a;
+  --orange: #E85D04;
+  --orange2: #F48C06;
+  --orange-light: #FFF3E6;
+  --orange-glow: rgba(232,93,4,0.12);
+  --dark: #1A1A2E;
+  --dark2: #16213E;
+  --charcoal: #2D2D3A;
+  --bg: #F4F6F8;
+  --white: #FFFFFF;
+  --border: #E2E6EA;
+  --border2: #D0D5DD;
+  --text: #1A1A2E;
+  --text2: #4A5568;
+  --muted: #9CA3AF;
+  --green: #16A34A;
+  --green-bg: #DCFCE7;
+  --red: #DC2626;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+  --radius: 10px;
+  --radius-sm: 6px;
+  --radius-lg: 16px;
 }
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0,0,0,0);
-  white-space: nowrap;
-  border: 0;
-}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { background:var(--bg); color:var(--text); font-family:'Barlow',sans-serif; min-height:100vh; overflow-x:hidden; }
+img { display:block; max-width:100%; }
+button { font-family:'Barlow',sans-serif; cursor:pointer; }
+select { font-family:'Barlow',sans-serif; }
+input { font-family:'Barlow',sans-serif; }
 
-.fixpro-app,
-.fixpro-app * {
-  box-sizing: border-box;
-  letter-spacing: 0;
+/* ====================================================
+   TOP BAR
+==================================================== */
+.topbar {
+  background: var(--dark);
+  color: #aaa;
+  font-size: 0.78rem;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
-
-.fixpro-app {
-  min-height: 100svh;
-  background: linear-gradient(180deg, #ffffff 0%, #f3f6fa 100%);
-  color: var(--fp-ink);
-  font-family: "Manrope", system-ui, sans-serif;
-}
-
-.fp-shell {
-  width: min(1180px, 100%);
-  margin: 0 auto;
-  padding: 18px;
-}
-
-.fp-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 18px 0 20px;
-}
-
-.fp-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-}
-
-.fp-mark {
-  position: relative;
-  width: 56px;
-  height: 56px;
-  flex: 0 0 auto;
-  border: 1px solid var(--fp-line);
-  border-radius: 8px;
-  background: var(--fp-white);
-  box-shadow: 0 14px 34px rgba(0, 75, 147, 0.12);
-  overflow: hidden;
-}
-
-.fp-mark::before {
-  content: "";
-  position: absolute;
-  width: 34px;
-  height: 44px;
-  left: 13px;
-  top: 6px;
-  background: var(--fp-orange);
-  clip-path: polygon(55% 0, 100% 0, 65% 42%, 100% 42%, 25% 100%, 42% 55%, 0 55%);
-  box-shadow: 7px 0 0 rgba(215, 47, 19, 0.45);
-}
-
-.fp-mark::after {
-  content: "";
-  position: absolute;
-  width: 42px;
-  height: 10px;
-  left: 8px;
-  bottom: 7px;
-  border-radius: 999px;
-  background: var(--fp-blue);
-  transform: rotate(-10deg);
-}
-
-.fp-name {
-  font-size: 30px;
-  font-weight: 800;
-  line-height: 1;
-}
-
-.fp-name span {
-  color: var(--fp-blue);
-}
-
-.fp-name strong {
-  color: var(--fp-orange);
-  font-weight: 800;
-}
-
-.fp-sub {
-  margin-top: 5px;
-  color: var(--fp-muted);
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.fp-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 36px;
-  padding: 0 12px;
-  border: 1px solid rgba(0, 75, 147, 0.14);
-  border-radius: 999px;
-  background: var(--fp-white);
-  color: var(--fp-blue-dark);
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.fp-status::before {
-  content: "";
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--fp-orange);
-}
-
-.fp-panel {
-  border: 1px solid var(--fp-line);
-  border-radius: 8px;
-  background: rgba(255,255,255,0.92);
-  box-shadow: 0 18px 50px rgba(23, 32, 51, 0.08);
-}
-
-.fp-search {
-  padding: 16px;
-}
-
-.fp-search-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1.35fr auto;
-  gap: 10px;
-  align-items: end;
-}
-
-.fp-field {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  min-width: 0;
-}
-
-.fp-field span,
-.fp-filter-label {
-  color: var(--fp-muted);
-  font-family: "DM Mono", monospace;
-  font-size: 11px;
-  font-weight: 500;
-}
-
-.fp-field select,
-.fp-field input {
-  width: 100%;
-  height: 42px;
-  border: 1px solid var(--fp-line);
-  border-radius: 8px;
-  background: var(--fp-soft);
-  color: var(--fp-ink);
-  font: 700 14px "Manrope", system-ui, sans-serif;
-  padding: 0 12px;
-  outline: none;
-}
-
-.fp-field select:focus,
-.fp-field input:focus {
-  border-color: var(--fp-blue);
-  background: var(--fp-white);
-  box-shadow: 0 0 0 4px rgba(0, 75, 147, 0.08);
-}
-
-.fp-button {
-  height: 42px;
-  border: 0;
-  border-radius: 8px;
-  padding: 0 18px;
-  background: var(--fp-blue);
-  color: var(--fp-white);
-  font: 800 14px "Manrope", system-ui, sans-serif;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.fp-button:hover {
-  background: var(--fp-blue-dark);
-}
-
-.fp-extra {
-  display: flex;
+.topbar-inner {
+  max-width: 1280px; margin: 0 auto; padding: 0 1.5rem;
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin-top: 14px;
+}
+.topbar-left { display:flex; gap:1.5rem; align-items:center; }
+.topbar-item { display:flex; align-items:center; gap:6px; color:#bbb; }
+.topbar-item span { color:var(--orange); }
+.topbar-right { display:flex; gap:1rem; }
+.topbar-link { color:#aaa; text-decoration:none; transition:color 0.2s; }
+.topbar-link:hover { color:var(--orange); }
+
+/* ====================================================
+   HEADER
+==================================================== */
+header {
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+  position: sticky; top:0; z-index:200;
+  border-bottom: 1px solid var(--border);
+}
+.header-inner {
+  max-width:1280px; margin:0 auto; padding:0 1.5rem;
+  display:flex; align-items:center; gap:1.5rem;
+  height:72px;
 }
 
-.fp-chip,
-.fp-provider,
-.fp-clear {
-  min-height: 34px;
-  border: 1px solid var(--fp-line);
-  border-radius: 999px;
-  background: var(--fp-white);
-  color: var(--fp-ink);
-  padding: 0 12px;
-  font: 800 12px "Manrope", system-ui, sans-serif;
-  cursor: pointer;
+/* LOGO */
+.logo-wrap { display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0; }
+.logo-icon {
+  width:44px; height:44px;
+  background:linear-gradient(135deg, var(--orange), var(--orange2));
+  border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px;
+  box-shadow: 0 4px 12px rgba(232,93,4,0.35);
+  flex-shrink:0;
+}
+.logo-text-wrap {}
+.logo-name {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:1.4rem; font-weight:800;
+  color:var(--dark); letter-spacing:1px;
+  line-height:1;
+}
+.logo-name em { color:var(--orange); font-style:normal; }
+.logo-sub { font-size:0.62rem; color:var(--muted); letter-spacing:2px; text-transform:uppercase; }
+
+/* SEARCH */
+.header-search { flex:1; max-width:600px; position:relative; }
+.header-search input {
+  width:100%; padding:0 1rem 0 3rem;
+  height:44px;
+  border:2px solid var(--border2);
+  border-radius:var(--radius);
+  font-size:0.88rem; color:var(--text);
+  outline:none; background:var(--bg);
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+.header-search input:focus {
+  border-color:var(--orange);
+  box-shadow: 0 0 0 3px var(--orange-glow);
+  background:var(--white);
+}
+.header-search input::placeholder { color:var(--muted); }
+.header-search .s-ico {
+  position:absolute; left:0.9rem; top:50%; transform:translateY(-50%);
+  color:var(--muted); font-size:1rem; pointer-events:none;
+}
+.header-search .s-btn {
+  position:absolute; right:0; top:0; bottom:0;
+  background:var(--orange); border:none; color:white;
+  padding:0 1.1rem; border-radius:0 var(--radius) var(--radius) 0;
+  font-weight:700; font-size:0.8rem; letter-spacing:1px; text-transform:uppercase;
+  transition:background 0.2s;
+}
+.header-search .s-btn:hover { background:#c94f00; }
+
+/* HEADER ACTIONS */
+.header-actions { display:flex; align-items:center; gap:0.75rem; margin-left:auto; flex-shrink:0; }
+.sync-pill {
+  display:flex; align-items:center; gap:6px;
+  padding:6px 12px;
+  background:var(--bg); border:1px solid var(--border);
+  border-radius:20px; font-size:0.7rem; color:var(--muted);
+  font-family:'JetBrains Mono',monospace;
+}
+.sync-dot { width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 5px var(--green); animation:blink 2s infinite; }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+/* ====================================================
+   NAV BAR
+==================================================== */
+.navbar {
+  background: var(--dark);
+  border-bottom: 3px solid var(--orange);
+}
+.navbar-inner {
+  max-width:1280px; margin:0 auto; padding:0 1.5rem;
+  display:flex; align-items:center; gap:0;
+}
+.nav-item {
+  padding:0 1.1rem; height:46px;
+  display:flex; align-items:center;
+  color:#ccc; font-size:0.82rem; font-weight:600;
+  letter-spacing:0.5px; text-transform:uppercase;
+  cursor:pointer; transition:color 0.2s, background 0.2s;
+  border:none; background:none; white-space:nowrap;
+}
+.nav-item:hover { color:white; background:rgba(255,255,255,0.06); }
+.nav-item.active { color:var(--orange); border-bottom:3px solid var(--orange); margin-bottom:-3px; }
+.nav-sep { width:1px; height:20px; background:rgba(255,255,255,0.08); flex-shrink:0; }
+
+/* ====================================================
+   HERO SECTION
+==================================================== */
+.hero {
+  position:relative;
+  background: linear-gradient(135deg, var(--dark2) 0%, var(--charcoal) 100%);
+  overflow:hidden; min-height:380px;
+  display:flex; align-items:center;
+}
+.hero::before {
+  content:'';
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse at 70% 50%, rgba(232,93,4,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 80%, rgba(244,140,6,0.08) 0%, transparent 50%);
+}
+/* Decorative gear */
+.hero-gear {
+  position:absolute; right:-60px; top:50%; transform:translateY(-50%);
+  width:420px; height:420px; opacity:0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='white' stroke-width='2'/%3E%3Ccircle cx='50' cy='50' r='15' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E");
+  background-size:contain; background-repeat:no-repeat;
+  pointer-events:none;
+}
+.hero-content {
+  position:relative; z-index:2;
+  max-width:1280px; margin:0 auto; padding:3rem 1.5rem;
+  width:100%;
+}
+.hero-tag {
+  display:inline-block;
+  background:var(--orange); color:white;
+  font-size:0.65rem; font-weight:800; letter-spacing:3px; text-transform:uppercase;
+  padding:4px 12px; border-radius:3px; margin-bottom:1rem;
+}
+.hero-h1 {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(2.2rem,5vw,3.8rem); font-weight:900;
+  color:white; line-height:1; letter-spacing:1px;
+  margin-bottom:0.5rem;
+}
+.hero-h1 em { color:var(--orange2); font-style:normal; }
+.hero-sub { color:#9CA3AF; font-size:0.95rem; font-weight:300; margin-bottom:2rem; }
+
+/* HERO SEARCH BAR */
+.hero-search {
+  display:flex; gap:0; max-width:760px;
+  background:white; border-radius:var(--radius);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  overflow:hidden;
+}
+.hero-search input {
+  flex:1; padding:1rem 1.2rem;
+  border:none; outline:none;
+  font-size:0.95rem; color:var(--text);
+}
+.hero-search input::placeholder { color:var(--muted); }
+.hero-search .hs-divider { width:1px; background:var(--border); flex-shrink:0; }
+.hero-search select {
+  padding:0 1rem; border:none; outline:none;
+  font-size:0.82rem; color:var(--text2); background:white;
+  cursor:pointer; min-width:140px;
+}
+.hero-search .hs-btn {
+  padding:0 1.8rem; background:var(--orange); color:white; border:none;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:1rem; font-weight:800; letter-spacing:1px; text-transform:uppercase;
+  transition:background 0.2s; white-space:nowrap;
+}
+.hero-search .hs-btn:hover { background:#c94f00; }
+
+/* HERO STATS */
+.hero-stats { display:flex; gap:2rem; margin-top:2rem; flex-wrap:wrap; }
+.hero-stat { display:flex; align-items:center; gap:8px; }
+.hero-stat-n {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:1.6rem; font-weight:900; color:var(--orange2); line-height:1;
+}
+.hero-stat-l { font-size:0.7rem; color:#9CA3AF; text-transform:uppercase; letter-spacing:1.5px; line-height:1.3; }
+
+/* ====================================================
+   FEATURES BAR
+==================================================== */
+.features-bar {
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  box-shadow:var(--shadow-sm);
+}
+.features-inner {
+  max-width:1280px; margin:0 auto; padding:0 1.5rem;
+  display:grid; grid-template-columns:repeat(4,1fr);
+}
+.feature-item {
+  display:flex; align-items:center; gap:14px;
+  padding:1.1rem 1.25rem;
+  border-right:1px solid var(--border);
+}
+.feature-item:last-child { border-right:none; }
+.feature-ico { font-size:1.6rem; flex-shrink:0; }
+.feature-title { font-size:0.82rem; font-weight:700; color:var(--text); }
+.feature-sub { font-size:0.72rem; color:var(--muted); }
+
+/* ====================================================
+   MAIN LAYOUT — 2 COLUMNS
+==================================================== */
+.main-wrap {
+  max-width:1280px; margin:2rem auto; padding:0 1.5rem;
+  display:grid; grid-template-columns:240px 1fr; gap:1.5rem;
+  align-items:start;
+}
+@media(max-width:900px){ .main-wrap{grid-template-columns:1fr;} .sidebar{display:none;} }
+
+/* ====================================================
+   SIDEBAR
+==================================================== */
+.sidebar { display:flex; flex-direction:column; gap:1.25rem; }
+
+.sidebar-box {
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:var(--shadow-sm);
+}
+.sidebar-title {
+  background:var(--dark);
+  color:white;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:0.9rem; font-weight:800; letter-spacing:2px; text-transform:uppercase;
+  padding:0.75rem 1rem;
+  display:flex; align-items:center; gap:8px;
+}
+.sidebar-title::before {
+  content:'';width:3px;height:16px;background:var(--orange);border-radius:2px;flex-shrink:0;
+}
+.sidebar-body { padding:1rem; }
+
+/* Category list */
+.cat-list { list-style:none; display:flex; flex-direction:column; gap:2px; }
+.cat-item {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:8px 10px; border-radius:var(--radius-sm);
+  cursor:pointer; transition:all 0.15s;
+  font-size:0.82rem; color:var(--text2); font-weight:500;
+}
+.cat-item:hover,.cat-item.active {
+  background:var(--orange-light); color:var(--orange);
+}
+.cat-item.active { font-weight:700; }
+.cat-left { display:flex; align-items:center; gap:8px; }
+.cat-ico { font-size:1rem; }
+.cat-count {
+  font-size:0.65rem; background:var(--bg);
+  border:1px solid var(--border); color:var(--muted);
+  padding:1px 6px; border-radius:10px;
+}
+.cat-item.active .cat-count { background:var(--orange); color:white; border-color:var(--orange); }
+
+/* Filters */
+.filter-group { margin-bottom:1rem; }
+.filter-group:last-child { margin-bottom:0; }
+.filter-group-label {
+  font-size:0.7rem; font-weight:700; color:var(--muted);
+  text-transform:uppercase; letter-spacing:2px; margin-bottom:6px; display:block;
+}
+.filter-sel {
+  width:100%; padding:8px 10px;
+  background:var(--bg); border:1px solid var(--border2);
+  border-radius:var(--radius-sm); color:var(--text);
+  font-size:0.82rem; outline:none; cursor:pointer;
+  transition:border-color 0.2s;
+}
+.filter-sel:focus,.filter-sel:hover { border-color:var(--orange); }
+
+/* Provider filters */
+.provider-filters { display:flex; flex-direction:column; gap:6px; }
+.provider-check {
+  display:flex; align-items:center; gap:8px;
+  padding:7px 10px; border-radius:var(--radius-sm);
+  cursor:pointer; transition:background 0.15s;
+  font-size:0.82rem; color:var(--text2); font-weight:500;
+}
+.provider-check:hover { background:var(--bg); }
+.provider-check input[type=checkbox] { accent-color:var(--orange); width:15px;height:15px; flex-shrink:0; }
+.provider-dot {
+  width:8px; height:8px; border-radius:50%; flex-shrink:0;
 }
 
-.fp-chip:hover,
-.fp-clear:hover {
-  border-color: var(--fp-blue);
+/* ====================================================
+   CONTENT AREA
+==================================================== */
+.content {}
+
+/* RESULTS TOOLBAR */
+.results-toolbar {
+  background:var(--white); border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:0.75rem 1rem;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:1rem; flex-wrap:wrap; margin-bottom:1rem;
+  box-shadow:var(--shadow-sm);
+}
+.results-count { font-size:0.82rem; color:var(--text2); }
+.results-count b { color:var(--orange); font-size:1rem; }
+.toolbar-right { display:flex; align-items:center; gap:0.75rem; }
+.sort-sel {
+  padding:6px 10px; background:var(--bg); border:1px solid var(--border2);
+  border-radius:var(--radius-sm); font-size:0.8rem; color:var(--text); outline:none; cursor:pointer;
+}
+.view-toggle { display:flex; gap:4px; }
+.view-btn {
+  width:32px;height:32px; border-radius:var(--radius-sm);
+  border:1px solid var(--border); background:var(--bg);
+  color:var(--muted); font-size:0.9rem;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer; transition:all 0.15s;
+}
+.view-btn.active,.view-btn:hover { background:var(--orange); color:white; border-color:var(--orange); }
+
+/* ====================================================
+   PRODUCT GRID
+==================================================== */
+.products-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+  gap:1rem;
+}
+.products-grid.list-view {
+  grid-template-columns:1fr;
 }
 
-.fp-provider {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--fp-muted);
+/* PRODUCT CARD — GRID */
+.pcard {
+  background:var(--white); border:1px solid var(--border);
+  border-radius:var(--radius); overflow:hidden;
+  box-shadow:var(--shadow-sm); cursor:pointer;
+  transition:transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  animation:fadeUp 0.25s ease both;
+  position:relative;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
+.pcard:hover { transform:translateY(-3px); box-shadow:var(--shadow-lg); border-color:var(--border2); }
+.pcard.selected { border-color:var(--orange); box-shadow:0 0 0 2px var(--orange-glow),var(--shadow-lg); }
+
+/* Card badges */
+.pcard-badges { position:absolute; top:8px; left:8px; z-index:2; display:flex; gap:4px; flex-wrap:wrap; }
+.badge {
+  padding:2px 8px; border-radius:3px;
+  font-size:0.62rem; font-weight:800; letter-spacing:0.5px; text-transform:uppercase;
+}
+.badge-new { background:var(--orange); color:white; }
+.badge-hot { background:#DC2626; color:white; }
+
+/* Provider badge top right */
+.pcard-provider { position:absolute; top:8px; right:8px; z-index:2; }
+.provider-tag {
+  padding:2px 8px; border-radius:3px;
+  font-size:0.6rem; font-weight:800; letter-spacing:1px;
+}
+.pt-COMEXCAR { background:rgba(22,163,74,0.12); color:#16A34A; border:1px solid rgba(22,163,74,0.25); }
+.pt-ARZE { background:rgba(232,93,4,0.12); color:var(--orange); border:1px solid rgba(232,93,4,0.25); }
+.pt-TRESSOLS { background:rgba(124,58,237,0.12); color:#7C3AED; border:1px solid rgba(124,58,237,0.25); }
+.pt-PH { background:rgba(37,99,235,0.12); color:#2563EB; border:1px solid rgba(37,99,235,0.25); }
+
+/* Image area */
+.pcard-img {
+  height:160px; background:#F8F9FA;
+  display:flex; align-items:center; justify-content:center;
+  border-bottom:1px solid var(--border); position:relative; overflow:hidden;
+}
+.pcard-img-placeholder { font-size:3.5rem; opacity:0.18; user-select:none; }
+.pcard-img img { width:100%; height:100%; object-fit:contain; padding:12px; }
+
+/* Card body */
+.pcard-body { padding:0.9rem; }
+.pcard-sku { font-family:'JetBrains Mono',monospace; font-size:0.65rem; color:var(--muted); margin-bottom:4px; }
+.pcard-name { font-size:0.82rem; font-weight:600; color:var(--text); line-height:1.35; margin-bottom:6px; min-height:36px; }
+.pcard-vehicles { font-size:0.72rem; color:var(--muted); margin-bottom:8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pcard-marca { font-size:0.7rem; color:var(--text2); font-weight:500; margin-bottom:8px; }
+
+/* Price row */
+.pcard-price-row { display:flex; align-items:center; justify-content:space-between; gap:6px; }
+.pcard-price {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:1.3rem; font-weight:800; color:var(--orange); line-height:1;
+}
+.pcard-price-consult { font-size:0.75rem; color:var(--muted); font-style:italic; }
+.pcard-btn {
+  width:32px;height:32px; border-radius:50%;
+  background:var(--orange); border:none; color:white;
+  font-size:0.9rem; display:flex; align-items:center; justify-content:center;
+  transition:background 0.2s, transform 0.15s;
+  flex-shrink:0;
+}
+.pcard-btn:hover { background:#c94f00; transform:scale(1.1); }
+
+/* Stock */
+.stock-ok { color:var(--green); font-size:0.68rem; font-weight:600; }
+.stock-consult { color:var(--orange); font-size:0.68rem; font-weight:600; }
+
+/* ====================================================
+   LIST VIEW CARD
+==================================================== */
+.products-grid.list-view .pcard { }
+.products-grid.list-view .pcard-inner {
+  display:grid; grid-template-columns:120px 1fr auto;
+  align-items:center; gap:1rem;
+}
+.products-grid.list-view .pcard-img { height:90px; border-bottom:none; border-right:1px solid var(--border); flex-shrink:0; }
+.products-grid.list-view .pcard-body { padding:0.75rem 0.75rem 0.75rem 0; }
+.products-grid.list-view .pcard-right { padding:0.75rem 1rem; text-align:right; flex-shrink:0; min-width:130px; }
+.products-grid.list-view .pcard-price { font-size:1.5rem; }
+
+/* ====================================================
+   EXPANDED MODAL OVERLAY
+==================================================== */
+.modal-overlay {
+  position:fixed; inset:0; z-index:500;
+  background:rgba(0,0,0,0.55); backdrop-filter:blur(4px);
+  display:none; align-items:center; justify-content:center; padding:1rem;
+}
+.modal-overlay.open { display:flex; }
+.modal {
+  background:var(--white); border-radius:var(--radius-lg);
+  width:100%; max-width:680px; max-height:90vh; overflow-y:auto;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.25);
+  animation:modalIn 0.25s ease;
+}
+@keyframes modalIn { from{opacity:0;transform:translateY(20px) scale(0.97);} to{opacity:1;transform:translateY(0) scale(1);} }
+
+.modal-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:1.25rem 1.5rem; border-bottom:1px solid var(--border);
+  background:var(--dark); border-radius:var(--radius-lg) var(--radius-lg) 0 0;
+}
+.modal-title { font-family:'Barlow Condensed',sans-serif; font-size:1.1rem; font-weight:800; color:white; letter-spacing:1px; }
+.modal-close {
+  width:32px;height:32px; border-radius:50%;
+  background:rgba(255,255,255,0.1); border:none; color:white; font-size:1rem;
+  cursor:pointer; transition:background 0.2s;
+  display:flex;align-items:center;justify-content:center;
+}
+.modal-close:hover { background:var(--orange); }
+
+.modal-body { padding:1.5rem; }
+
+/* Modal product info */
+.modal-img {
+  width:100%; height:200px; background:var(--bg);
+  border-radius:var(--radius); border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  font-size:5rem; opacity:0.15; margin-bottom:1.25rem;
+  overflow:hidden;
+}
+.modal-img img { width:100%; height:100%; object-fit:contain; padding:16px; opacity:1; }
+
+.modal-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem; }
+.modal-field {}
+.modal-field-label { font-size:0.68rem; color:var(--muted); text-transform:uppercase; letter-spacing:2px; margin-bottom:3px; }
+.modal-field-val { font-family:'JetBrains Mono',monospace; font-size:0.85rem; font-weight:600; color:var(--text); }
+
+/* COEFICIENTE CALC */
+.coef-section {
+  background:linear-gradient(135deg, var(--dark) 0%, var(--charcoal) 100%);
+  border-radius:var(--radius); padding:1.25rem; margin-bottom:1rem;
+}
+.coef-h {
+  font-family:'Barlow Condensed',sans-serif; font-size:1rem; font-weight:800;
+  color:white; letter-spacing:2px; text-transform:uppercase;
+  margin-bottom:1rem; display:flex; align-items:center; gap:8px;
+}
+.coef-h::before { content:''; width:4px; height:18px; background:var(--orange); border-radius:2px; display:inline-block; }
+.coef-controls { display:flex; align-items:center; gap:1rem; flex-wrap:wrap; margin-bottom:1rem; }
+.coef-pct-wrap { display:flex; align-items:center; gap:8px; }
+.coef-pct-label { font-size:0.8rem; color:#9CA3AF; }
+.coef-inp {
+  width:80px; padding:7px 10px; text-align:center;
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+  border-radius:var(--radius-sm); color:white;
+  font-family:'JetBrains Mono',monospace; font-size:1rem;
+  outline:none; transition:border-color 0.2s;
+}
+.coef-inp:focus { border-color:var(--orange); }
+.coef-sym { color:var(--muted); font-size:0.9rem; }
+.coef-results { display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; }
+.coef-res-item { background:rgba(255,255,255,0.05); border-radius:var(--radius-sm); padding:0.75rem; }
+.coef-res-label { font-size:0.62rem; color:#6B7280; text-transform:uppercase; letter-spacing:2px; margin-bottom:4px; }
+.coef-res-val { font-family:'Barlow Condensed',sans-serif; font-size:1.4rem; font-weight:800; line-height:1; }
+.crv-lista { color:#9CA3AF; }
+.crv-venta { color:var(--orange2); }
+.crv-ganancia { color:#4ADE80; }
+.coef-presets { display:flex; gap:6px; flex-wrap:wrap; }
+.coef-preset {
+  padding:4px 12px; border-radius:20px; font-size:0.72rem; font-weight:600;
+  border:1px solid rgba(255,255,255,0.15); background:transparent; color:#9CA3AF;
+  cursor:pointer; transition:all 0.15s;
+}
+.coef-preset:hover { border-color:var(--orange); color:var(--orange2); }
+
+.modal-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:0.5rem; }
+.btn-primary { padding:9px 20px; background:var(--orange); color:white; border:none; border-radius:var(--radius-sm); font-weight:700; font-size:0.82rem; text-transform:uppercase; letter-spacing:1px; transition:background 0.2s; }
+.btn-primary:hover { background:#c94f00; }
+.btn-secondary { padding:9px 20px; background:transparent; color:var(--text2); border:1px solid var(--border2); border-radius:var(--radius-sm); font-weight:600; font-size:0.82rem; transition:all 0.15s; }
+.btn-secondary:hover { border-color:var(--orange); color:var(--orange); }
+
+/* ====================================================
+   LOAD MORE
+==================================================== */
+.load-more-wrap { text-align:center; padding:2rem 0; }
+.btn-load-more {
+  padding:12px 36px; background:var(--white);
+  border:2px solid var(--orange); color:var(--orange);
+  border-radius:var(--radius); font-weight:700; font-size:0.88rem;
+  text-transform:uppercase; letter-spacing:1px;
+  transition:all 0.2s;
+}
+.btn-load-more:hover { background:var(--orange); color:white; }
+
+/* ====================================================
+   UPLOAD SECTION
+==================================================== */
+.upload-section {
+  background:var(--white); border:1px solid var(--border);
+  border-radius:var(--radius); padding:1.5rem;
+  margin-top:1.5rem; box-shadow:var(--shadow-sm);
+  text-align:center;
+}
+.upload-h { font-family:'Barlow Condensed',sans-serif; font-size:1rem; font-weight:800; color:var(--dark); letter-spacing:1px; margin-bottom:0.4rem; }
+.upload-t { font-size:0.78rem; color:var(--muted); margin-bottom:1rem; }
+label.upload-lbl {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:8px 20px;
+  background:var(--dark); color:white; border-radius:var(--radius-sm);
+  font-size:0.8rem; font-weight:700; cursor:pointer; transition:background 0.2s;
+}
+label.upload-lbl:hover { background:var(--orange); }
+#fileInp { display:none; }
+#uploadStatus { margin-top:0.75rem; font-size:0.78rem; color:var(--muted); }
+
+/* ====================================================
+   TOAST
+==================================================== */
+.toast {
+  position:fixed; bottom:1.5rem; right:1.5rem; z-index:1000;
+  background:var(--dark); color:white;
+  border-left:4px solid var(--orange);
+  border-radius:var(--radius-sm); padding:0.9rem 1.25rem;
+  font-size:0.82rem; max-width:300px;
+  transform:translateY(80px); opacity:0; transition:all 0.3s;
+  box-shadow:var(--shadow-lg);
+}
+.toast.show { transform:translateY(0); opacity:1; }
+
+/* EMPTY */
+.empty { text-align:center; padding:4rem 1rem; color:var(--muted); }
+.empty-ico { font-size:3rem; opacity:0.2; margin-bottom:1rem; }
+.empty-h { font-family:'Barlow Condensed',sans-serif; font-size:1.4rem; font-weight:800; color:var(--text2); letter-spacing:1px; margin-bottom:0.5rem; }
+.empty-t { font-size:0.85rem; line-height:1.6; }
+
+/* LOADING */
+.loading-overlay { position:fixed;inset:0;z-index:900;background:rgba(255,255,255,0.85);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem; }
+.spinner { width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--orange);border-radius:50%;animation:spin 0.8s linear infinite; }
+@keyframes spin{ to{transform:rotate(360deg);} }
+.loading-txt { font-size:0.82rem; color:var(--muted); font-weight:600; letter-spacing:1px; }
+
+/* ====================================================
+   RESPONSIVE
+==================================================== */
+@media(max-width:768px){
+  .features-inner{ grid-template-columns:1fr 1fr; }
+  .feature-item:nth-child(2){ border-right:none; }
+  .hero-search{ flex-direction:column; border-radius:var(--radius); }
+  .hero-search input,.hero-search select,.hero-search .hs-btn{ border-radius:0; width:100%; }
+  .hero-search .hs-btn{ padding:0.85rem; }
+  .topbar{ display:none; }
+  .header-inner{ gap:0.75rem; }
+  .header-search{ max-width:none; }
+  .coef-results{ grid-template-columns:1fr 1fr; }
+  .modal-grid{ grid-template-columns:1fr; }
+}
+@media(max-width:480px){
+  .features-inner{ grid-template-columns:1fr; }
+  .feature-item{ border-right:none; border-bottom:1px solid var(--border); }
+  .products-grid{ grid-template-columns:1fr 1fr; }
+  .hero-stats{ gap:1rem; }
 }
 
-.fp-provider small {
-  font-family: "DM Mono", monospace;
-  font-size: 10px;
-}
+/* HIGHLIGHT */
+mark { background:rgba(232,93,4,0.15); color:var(--orange); border-radius:2px; padding:0 2px; font-style:normal; }
 
-.fp-provider.is-active {
-  color: var(--fp-white);
-  border-color: transparent;
-}
-
-.fp-provider[data-provider="arze"].is-active { background: var(--fp-blue); }
-.fp-provider[data-provider="comex"].is-active { background: #08705a; }
-.fp-provider[data-provider="tressols"].is-active { background: #96391f; }
-.fp-provider[data-provider="ph"].is-active { background: #165d9e; }
-
-.fp-switch {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 34px;
-  color: var(--fp-ink);
-  font-size: 12px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.fp-switch input {
-  width: 18px;
-  height: 18px;
-  accent-color: var(--fp-orange);
-}
-
-.fp-results-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 18px 0 12px;
-}
-
-.fp-results-title {
-  font-size: 22px;
-  font-weight: 800;
-}
-
-.fp-results-sub {
-  margin-top: 4px;
-  color: var(--fp-muted);
-  font-family: "DM Mono", monospace;
-  font-size: 12px;
-}
-
-.fp-summary {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: flex-end;
-}
-
-.fp-summary span {
-  display: inline-flex;
-  min-height: 32px;
-  align-items: center;
-  border: 1px solid var(--fp-line);
-  border-radius: 999px;
-  background: var(--fp-white);
-  padding: 0 10px;
-  color: var(--fp-muted);
-  font: 500 11px "DM Mono", monospace;
-}
-
-.fp-list {
-  display: grid;
-  gap: 12px;
-  padding-bottom: 24px;
-}
-
-.fp-card {
-  border: 1px solid var(--fp-line);
-  border-radius: 8px;
-  background: var(--fp-white);
-  overflow: hidden;
-  box-shadow: 0 12px 32px rgba(23, 32, 51, 0.06);
-}
-
-.fp-card-top {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 16px;
-  padding: 18px;
-}
-
-.fp-kicker {
-  color: var(--fp-orange);
-  font: 500 11px "DM Mono", monospace;
-  margin-bottom: 6px;
-}
-
-.fp-card h3 {
-  font-size: 19px;
-  line-height: 1.2;
-  margin: 0 0 10px;
-}
-
-.fp-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.fp-tag {
-  display: inline-flex;
-  align-items: center;
-  min-height: 26px;
-  border-radius: 999px;
-  background: var(--fp-soft);
-  border: 1px solid var(--fp-line);
-  padding: 0 9px;
-  color: var(--fp-muted);
-  font: 700 12px "Manrope", system-ui, sans-serif;
-}
-
-.fp-price {
-  min-width: 160px;
-  text-align: right;
-}
-
-.fp-price span {
-  display: block;
-  color: var(--fp-muted);
-  font: 500 11px "DM Mono", monospace;
-}
-
-.fp-price strong {
-  display: block;
-  margin-top: 4px;
-  color: var(--fp-blue);
-  font: 800 22px "Manrope", system-ui, sans-serif;
-}
-
-.fp-price small {
-  display: block;
-  margin-top: 4px;
-  color: var(--fp-muted);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.fp-stock-table {
-  padding: 0 18px 16px;
-}
-
-.fp-stock-head,
-.fp-stock-row {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr 1.2fr 0.9fr 0.95fr;
-  gap: 10px;
-  align-items: center;
-}
-
-.fp-stock-head {
-  padding: 10px 0;
-  border-top: 1px solid var(--fp-line);
-  color: var(--fp-muted);
-  font: 500 11px "DM Mono", monospace;
-}
-
-.fp-stock-row {
-  min-height: 46px;
-  border-top: 1px solid #edf2f7;
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.fp-cell {
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.fp-mono {
-  font-family: "DM Mono", monospace;
-  font-weight: 500;
-}
-
-.fp-supplier {
-  display: inline-flex;
-  min-height: 26px;
-  align-items: center;
-  border-radius: 999px;
-  padding: 0 9px;
-  color: var(--fp-white);
-  font: 800 11px "DM Mono", monospace;
-}
-
-.fp-supplier.arze { background: var(--fp-blue); }
-.fp-supplier.comex { background: #08705a; }
-.fp-supplier.tressols { background: #96391f; }
-.fp-supplier.ph { background: #165d9e; }
-
-.fp-stock-pill {
-  display: inline-flex;
-  min-height: 26px;
-  align-items: center;
-  border-radius: 999px;
-  padding: 0 9px;
-  font: 800 11px "Manrope", system-ui, sans-serif;
-}
-
-.fp-stock-pill.ok {
-  background: rgba(20, 131, 79, 0.12);
-  color: var(--fp-ok);
-}
-
-.fp-stock-pill.low {
-  background: rgba(185, 107, 0, 0.14);
-  color: var(--fp-warn);
-}
-
-.fp-stock-pill.none {
-  background: rgba(179, 52, 42, 0.12);
-  color: var(--fp-no);
-}
-
-.fp-empty {
-  padding: 44px 18px;
-  text-align: center;
-  color: var(--fp-muted);
-}
-
-.fp-empty strong {
-  display: block;
-  color: var(--fp-ink);
-  font-size: 18px;
-  margin-bottom: 6px;
-}
-
-@media (max-width: 900px) {
-  .fp-search-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .fp-search-grid .fp-button {
-    grid-column: 1 / -1;
-  }
-}
-
-@media (max-width: 640px) {
-  .fp-shell {
-    padding: 12px;
-  }
-
-  .fp-header {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .fp-status {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .fp-mark {
-    width: 50px;
-    height: 50px;
-  }
-
-  .fp-name {
-    font-size: 27px;
-  }
-
-  .fp-search {
-    padding: 12px;
-  }
-
-  .fp-search-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .fp-button {
-    width: 100%;
-  }
-
-  .fp-extra {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
-
-  .fp-filter-label,
-  .fp-chip,
-  .fp-provider,
-  .fp-switch,
-  .fp-clear {
-    flex: 0 0 auto;
-  }
-
-  .fp-results-head {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .fp-summary {
-    justify-content: flex-start;
-  }
-
-  .fp-card-top {
-    grid-template-columns: 1fr;
-    padding: 15px;
-  }
-
-  .fp-card h3 {
-    font-size: 17px;
-  }
-
-  .fp-price {
-    min-width: 0;
-    text-align: left;
-    padding-top: 12px;
-    border-top: 1px solid var(--fp-line);
-  }
-
-  .fp-stock-table {
-    padding: 0 15px 14px;
-  }
-
-  .fp-stock-head {
-    display: none;
-  }
-
-  .fp-stock-row {
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    padding: 12px 0;
-    align-items: start;
-  }
-
-  .fp-cell::before {
-    content: attr(data-label);
-    display: block;
-    margin-bottom: 4px;
-    color: var(--fp-muted);
-    font: 500 10px "DM Mono", monospace;
-  }
-}
-
-@media (max-width: 380px) {
-  .fp-stock-row {
-    grid-template-columns: 1fr;
-  }
-}
+/* SCROLLBAR */
+::-webkit-scrollbar{ width:5px; }
+::-webkit-scrollbar-track{ background:var(--bg); }
+::-webkit-scrollbar-thumb{ background:var(--border2); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover{ background:var(--orange); }
 </style>
+</head>
+<body>
 
-<h2 class="sr-only">Buscador responsive de repuestos FixPro con stock por proveedor</h2>
+<!-- LOADING -->
+<div class="loading-overlay" id="loader">
+  <div class="spinner"></div>
+  <div class="loading-txt">CARGANDO CATÁLOGO...</div>
+</div>
 
-<div class="fixpro-app">
-  <div class="fp-shell">
-    <header class="fp-header">
-      <div class="fp-brand">
-        <div class="fp-mark" aria-hidden="true"></div>
-        <div>
-          <div class="fp-name"><span>Fix</span><strong>Pro</strong></div>
-          <div class="fp-sub">Soluciones rápidas y confiables</div>
-        </div>
-      </div>
-      <div class="fp-status">Stock por proveedor</div>
-    </header>
-
-    <section class="fp-panel fp-search">
-      <form id="fp-form">
-        <div class="fp-search-grid">
-          <label class="fp-field">
-            <span>Categoría</span>
-            <select id="fp-cat">
-              <option value="">Todas</option>
-              <option value="alternador">Alternadores</option>
-              <option value="motor-arranque">Motor de arranque</option>
-              <option value="regulador">Reguladores</option>
-              <option value="inducido">Inducidos</option>
-              <option value="bobina">Bobinas</option>
-              <option value="solenoide">Solenoides</option>
-            </select>
-          </label>
-
-          <label class="fp-field">
-            <span>Marca</span>
-            <select id="fp-marca">
-              <option value="">Todas</option>
-              <option value="Ford">Ford</option>
-              <option value="Volkswagen">Volkswagen</option>
-              <option value="Renault">Renault</option>
-              <option value="Chevrolet">Chevrolet</option>
-              <option value="Toyota">Toyota</option>
-              <option value="Fiat">Fiat</option>
-              <option value="Peugeot">Peugeot</option>
-            </select>
-          </label>
-
-          <label class="fp-field">
-            <span>Modelo</span>
-            <select id="fp-modelo" disabled>
-              <option value="">Todos</option>
-            </select>
-          </label>
-
-          <label class="fp-field">
-            <span>Código o nombre</span>
-            <input id="fp-texto" type="search" placeholder="ALT-0012, regulador, Hilux..." autocomplete="off">
-          </label>
-
-          <button class="fp-button" type="submit">Buscar</button>
-        </div>
-
-        <div class="fp-extra">
-          <span class="fp-filter-label">Rápidas</span>
-          <button class="fp-chip" type="button" data-cat="alternador" data-marca="Ford">Alternadores Ford</button>
-          <button class="fp-chip" type="button" data-cat="regulador">Reguladores</button>
-          <button class="fp-chip" type="button" data-cat="motor-arranque" data-marca="Volkswagen">Arranque VW</button>
-          <button class="fp-chip" type="button" data-marca="Toyota">Todo Toyota</button>
-          <button class="fp-chip" type="button" data-cat="bobina">Bobinas</button>
-        </div>
-
-        <div class="fp-extra" id="fp-proveedores"></div>
-
-        <div class="fp-extra">
-          <label class="fp-switch">
-            <input id="fp-solo-stock" type="checkbox">
-            Solo con stock
-          </label>
-          <button class="fp-clear" id="fp-limpiar" type="button">Limpiar filtros</button>
-        </div>
-      </form>
-    </section>
-
-    <section class="fp-results-head" aria-live="polite">
-      <div>
-        <div class="fp-results-title" id="fp-title">Repuestos disponibles</div>
-        <div class="fp-results-sub" id="fp-subtitle">Mostrando inventario completo</div>
-      </div>
-      <div class="fp-summary">
-        <span id="fp-count">0 repuestos</span>
-        <span id="fp-units">0 unidades</span>
-      </div>
-    </section>
-
-    <main class="fp-list" id="fp-results"></main>
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-left">
+      <div class="topbar-item">📞 <span>Contacto por WhatsApp</span></div>
+      <div class="topbar-item">📍 <span>Aristóbulo del Valle, Misiones</span></div>
+    </div>
+    <div class="topbar-right">
+      <a class="topbar-link" href="#">Sobre Mauri Repuestos</a>
+      <a class="topbar-link" href="#">Cómo comprar</a>
+    </div>
   </div>
 </div>
 
-<script>
-(() => {
-  const modelos = {
-    Ford: ['Falcon', 'F-100', 'Focus', 'Ecosport', 'Ranger', 'Ka', 'Fiesta'],
-    Volkswagen: ['Gol', 'Golf', 'Polo', 'Amarok', 'Saveiro', 'Suran'],
-    Renault: ['Megane', 'Logan', 'Sandero', 'Kangoo', 'Duster', 'Clio'],
-    Chevrolet: ['Corsa', 'Astra', 'Cruze', 'S10', 'Tracker', 'Spin'],
-    Toyota: ['Hilux', 'Corolla', 'Etios', 'SW4', 'Land Cruiser'],
-    Fiat: ['Uno', 'Palio', 'Siena', 'Strada', 'Punto', 'Toro'],
-    Peugeot: ['206', '207', '307', '308', '408', 'Partner']
-  };
-
-  const CATEGORIAS = {
-    'alternador': 'Alternador',
-    'motor-arranque': 'Motor de arranque',
-    'regulador': 'Regulador',
-    'inducido': 'Inducido',
-    'bobina': 'Bobina',
-    'solenoide': 'Solenoide'
-  };
-
-  const PROVEEDORES = {
-    arze: { nombre: 'ARZE' },
-    comex: { nombre: 'COMEX' },
-    tressols: { nombre: 'TRESSOLS' },
-    ph: { nombre: 'E.PH' }
-  };
-
-  const oferta = (proveedor, codigo, codigoOrig, precio, stock) => ({
-    proveedor, codigo, codigoOrig, precio, stock
-  });
-
-  const PRODUCTOS = [
-    {
-      id: 1, nombre: 'Alternador 14V 90A', categoria: 'alternador', marca: 'Ford',
-      modelos: ['Falcon', 'Ranger', 'F-100'], anio: '1998-2012', voltaje: '14V', potencia: '90A',
-      ofertas: [
-        oferta('arze', 'ALT-A0091', '0986042830', 42500, 6),
-        oferta('comex', 'ALT-C0091', '0986042830', 39800, 8),
-        oferta('tressols', 'ALT-T0091', '0986042830', 41200, 2),
-        oferta('ph', 'ALT-P0091', '0986042830', 43900, 0)
-      ]
-    },
-    {
-      id: 2, nombre: 'Alternador 14V 65A', categoria: 'alternador', marca: 'Renault',
-      modelos: ['Megane', 'Logan', 'Kangoo'], anio: '2000-2015', voltaje: '14V', potencia: '65A',
-      ofertas: [
-        oferta('arze', 'ALT-A0065', '7700101488', 36600, 0),
-        oferta('comex', 'ALT-C0065', '7700101488', 34800, 3),
-        oferta('tressols', 'ALT-T0065', '7700101488', 35200, 1),
-        oferta('ph', 'ALT-P0065', '7700101488', 37100, 4)
-      ]
-    },
-    {
-      id: 3, nombre: 'Alternador 14V 70A', categoria: 'alternador', marca: 'Volkswagen',
-      modelos: ['Gol', 'Polo', 'Saveiro'], anio: '2001-2016', voltaje: '14V', potencia: '70A',
-      ofertas: [
-        oferta('arze', 'ALT-A0070', '4338056', 38600, 5),
-        oferta('comex', 'ALT-C0070', '4338056', 36900, 0),
-        oferta('tressols', 'ALT-T0070', '4338056', 38100, 2),
-        oferta('ph', 'ALT-P0070', '4338056', 37900, 7)
-      ]
-    },
-    {
-      id: 4, nombre: 'Motor de arranque 12V 1.1kW', categoria: 'motor-arranque', marca: 'Volkswagen',
-      modelos: ['Gol', 'Golf', 'Suran'], anio: '2003-2018', voltaje: '12V', potencia: '1.1kW',
-      ofertas: [
-        oferta('arze', 'MAR-A0011', '0001107406', 28700, 9),
-        oferta('comex', 'MAR-C0011', '0001107406', 26500, 4),
-        oferta('tressols', 'MAR-T0011', '0001107406', 27900, 0),
-        oferta('ph', 'MAR-P0011', '0001107406', 29600, 2)
-      ]
-    },
-    {
-      id: 5, nombre: 'Motor de arranque 12V 0.9kW', categoria: 'motor-arranque', marca: 'Renault',
-      modelos: ['Clio', 'Logan', 'Sandero'], anio: '2005-2020', voltaje: '12V', potencia: '0.9kW',
-      ofertas: [
-        oferta('arze', 'MAR-A0009', '6001547612', 25700, 3),
-        oferta('comex', 'MAR-C0009', '6001547612', 24100, 0),
-        oferta('tressols', 'MAR-T0009', '6001547612', 24900, 6),
-        oferta('ph', 'MAR-P0009', '6001547612', 26300, 2)
-      ]
-    },
-    {
-      id: 6, nombre: 'Regulador de voltaje interno', categoria: 'regulador', marca: 'Ford',
-      modelos: ['Focus', 'Ka', 'Fiesta'], anio: '2002-2014', voltaje: '14.4V', potencia: '-',
-      ofertas: [
-        oferta('arze', 'REG-A0022', 'F00M144123', 8900, 11),
-        oferta('comex', 'REG-C0022', 'F00M144123', 8400, 3),
-        oferta('tressols', 'REG-T0022', 'F00M144123', 8700, 0),
-        oferta('ph', 'REG-P0022', 'F00M144123', 9100, 5)
-      ]
-    },
-    {
-      id: 7, nombre: 'Regulador de voltaje externo', categoria: 'regulador', marca: 'Volkswagen',
-      modelos: ['Amarok', 'Golf'], anio: '2010-2022', voltaje: '14.4V', potencia: '-',
-      ofertas: [
-        oferta('arze', 'REG-A0031', '1197311212', 11600, 2),
-        oferta('comex', 'REG-C0031', '1197311212', 11200, 1),
-        oferta('tressols', 'REG-T0031', '1197311212', 11900, 0),
-        oferta('ph', 'REG-P0031', '1197311212', 12100, 4)
-      ]
-    },
-    {
-      id: 8, nombre: 'Regulador de voltaje interno', categoria: 'regulador', marca: 'Chevrolet',
-      modelos: ['Corsa', 'Astra'], anio: '1998-2010', voltaje: '14.4V', potencia: '-',
-      ofertas: [
-        oferta('arze', 'REG-A0019', 'F00M144087', 7900, 8),
-        oferta('comex', 'REG-C0019', 'F00M144087', 7350, 0),
-        oferta('tressols', 'REG-T0019', 'F00M144087', 7600, 6),
-        oferta('ph', 'REG-P0019', 'F00M144087', 8100, 2)
-      ]
-    },
-    {
-      id: 9, nombre: 'Inducido 12V para arranque', categoria: 'inducido', marca: 'Toyota',
-      modelos: ['Hilux', 'Land Cruiser'], anio: '2005-2021', voltaje: '12V', potencia: '-',
-      ofertas: [
-        oferta('arze', 'IND-A0044', '9000082080', 18400, 5),
-        oferta('comex', 'IND-C0044', '9000082080', 17600, 3),
-        oferta('tressols', 'IND-T0044', '9000082080', 18900, 1),
-        oferta('ph', 'IND-P0044', '9000082080', 19400, 0)
-      ]
-    },
-    {
-      id: 10, nombre: 'Bobina de encendido', categoria: 'bobina', marca: 'Peugeot',
-      modelos: ['206', '207', '307'], anio: '2000-2013', voltaje: '12V', potencia: '-',
-      ofertas: [
-        oferta('arze', 'BOB-A0012', '597065', 14900, 0),
-        oferta('comex', 'BOB-C0012', '597065', 13700, 2),
-        oferta('tressols', 'BOB-T0012', '597065', 14500, 1),
-        oferta('ph', 'BOB-P0012', '597065', 14200, 7)
-      ]
-    },
-    {
-      id: 11, nombre: 'Solenoide para arranque', categoria: 'solenoide', marca: 'Chevrolet',
-      modelos: ['S10', 'Tracker'], anio: '2004-2019', voltaje: '12V', potencia: '-',
-      ofertas: [
-        oferta('arze', 'SOL-A0008', '0331303104', 9800, 2),
-        oferta('comex', 'SOL-C0008', '0331303104', 9300, 0),
-        oferta('tressols', 'SOL-T0008', '0331303104', 10100, 3),
-        oferta('ph', 'SOL-P0008', '0331303104', 10400, 1)
-      ]
-    },
-    {
-      id: 12, nombre: 'Alternador 14V 120A', categoria: 'alternador', marca: 'Toyota',
-      modelos: ['Hilux', 'SW4'], anio: '2010-2023', voltaje: '14V', potencia: '120A',
-      ofertas: [
-        oferta('arze', 'ALT-A0120', '7519322', 58900, 4),
-        oferta('comex', 'ALT-C0120', '7519322', 56800, 0),
-        oferta('tressols', 'ALT-T0120', '7519322', 55400, 3),
-        oferta('ph', 'ALT-P0120', '7519322', 60100, 1)
-      ]
-    }
-  ];
-
-  const $ = (id) => document.getElementById(id);
-  const proveedorKeys = Object.keys(PROVEEDORES);
-  const activos = new Set(proveedorKeys);
-
-  const money = new Intl.NumberFormat('es-AR', {
-    style: 'currency',
-    currency: 'ARS',
-    maximumFractionDigits: 0
-  });
-
-  function esc(value) {
-    return String(value ?? '').replace(/[&<>"']/g, (c) => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[c]));
-  }
-
-  function normalizar(value) {
-    return String(value ?? '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  }
-
-  function totalProveedor(key) {
-    return PRODUCTOS.reduce((sum, p) => {
-      return sum + p.ofertas.filter(o => o.proveedor === key).reduce((a, o) => a + o.stock, 0);
-    }, 0);
-  }
-
-  function renderProveedores() {
-    $('fp-proveedores').innerHTML = `
-      <span class="fp-filter-label">Proveedor</span>
-      ${proveedorKeys.map(key => `
-        <button class="fp-provider is-active" type="button" data-provider="${key}" aria-pressed="true">
-          ${PROVEEDORES[key].nombre}
-          <small>${totalProveedor(key)} u.</small>
-        </button>
-      `).join('')}
-    `;
-
-    document.querySelectorAll('.fp-provider').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const key = btn.dataset.provider;
-        activos.has(key) ? activos.delete(key) : activos.add(key);
-        if (activos.size === 0) activos.add(key);
-        actualizarProveedores();
-        render();
-      });
-    });
-  }
-
-  function actualizarProveedores() {
-    document.querySelectorAll('.fp-provider').forEach(btn => {
-      const isActive = activos.has(btn.dataset.provider);
-      btn.classList.toggle('is-active', isActive);
-      btn.setAttribute('aria-pressed', String(isActive));
-    });
-  }
-
-  function renderModelos(marca) {
-    const select = $('fp-modelo');
-    select.innerHTML = '<option value="">Todos</option>';
-    select.disabled = !marca;
-
-    if (!marca || !modelos[marca]) return;
-
-    modelos[marca].forEach(modelo => {
-      const option = document.createElement('option');
-      option.value = modelo;
-      option.textContent = modelo;
-      select.appendChild(option);
-    });
-  }
-
-  function stockClass(stock) {
-    if (stock <= 0) return ['none', 'Sin stock'];
-    if (stock <= 2) return ['low', `${stock} u. bajo`];
-    return ['ok', `${stock} unidades`];
-  }
-
-  function filtrar() {
-    const cat = $('fp-cat').value;
-    const marca = $('fp-marca').value;
-    const modelo = $('fp-modelo').value;
-    const texto = normalizar($('fp-texto').value.trim());
-    const soloStock = $('fp-solo-stock').checked;
-
-    return PRODUCTOS.map(producto => {
-      let ofertas = producto.ofertas.filter(o => activos.has(o.proveedor));
-      if (soloStock) ofertas = ofertas.filter(o => o.stock > 0);
-      if (!ofertas.length) return null;
-
-      if (cat && producto.categoria !== cat) return null;
-      if (marca && producto.marca !== marca) return null;
-      if (modelo && !producto.modelos.includes(modelo)) return null;
-
-      if (texto) {
-        const base = normalizar([
-          producto.nombre, producto.marca, producto.modelos.join(' '), producto.anio,
-          producto.voltaje, producto.potencia, CATEGORIAS[producto.categoria]
-        ].join(' '));
-
-        const codigos = normalizar(ofertas.map(o => [
-          o.codigo, o.codigoOrig, PROVEEDORES[o.proveedor].nombre
-        ].join(' ')).join(' '));
-
-        if (!base.includes(texto) && !codigos.includes(texto)) return null;
-      }
-
-      ofertas.sort((a, b) => Number(b.stock > 0) - Number(a.stock > 0) || a.precio - b.precio);
-      return { ...producto, ofertas };
-    }).filter(Boolean).sort((a, b) => {
-      const stockA = a.ofertas.reduce((s, o) => s + o.stock, 0);
-      const stockB = b.ofertas.reduce((s, o) => s + o.stock, 0);
-      return Number(stockB > 0) - Number(stockA > 0) || a.nombre.localeCompare(b.nombre);
-    });
-  }
-
-  function renderOferta(of) {
-    const prov = PROVEEDORES[of.proveedor];
-    const [clase, label] = stockClass(of.stock);
-
-    return `
-      <div class="fp-stock-row">
-        <div class="fp-cell" data-label="Proveedor">
-          <span class="fp-supplier ${of.proveedor}">${esc(prov.nombre)}</span>
-        </div>
-        <div class="fp-cell fp-mono" data-label="Código">${esc(of.codigo)}</div>
-        <div class="fp-cell fp-mono" data-label="Original">${esc(of.codigoOrig)}</div>
-        <div class="fp-cell" data-label="Stock">
-          <span class="fp-stock-pill ${clase}">${esc(label)}</span>
-        </div>
-        <div class="fp-cell fp-mono" data-label="Precio">${money.format(of.precio)}</div>
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <a class="logo-wrap" href="#">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-text-wrap">
+        <div class="logo-name">MAURI <em>REPUESTOS</em></div>
+        <div class="logo-sub">Electromecánica Automotriz</div>
       </div>
-    `;
-  }
+    </a>
+    <div class="header-search">
+      <span class="s-ico">🔍</span>
+      <input type="text" id="headerSearch" placeholder="Buscá por nombre, código, vehículo, marca..." autocomplete="off">
+      <button class="s-btn" onclick="triggerSearch()">BUSCAR</button>
+    </div>
+    <div class="header-actions">
+      <div class="sync-pill">
+        <div class="sync-dot"></div>
+        <span id="syncLabel">Sistema activo</span>
+      </div>
+    </div>
+  </div>
+</header>
 
-  function renderCard(producto) {
-    const totalStock = producto.ofertas.reduce((sum, o) => sum + o.stock, 0);
-    const mejor = producto.ofertas.filter(o => o.stock > 0).sort((a, b) => a.precio - b.precio)[0];
-    const mejorProveedor = mejor ? PROVEEDORES[mejor.proveedor].nombre : 'Consultar';
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <button class="nav-item active" data-cat="" onclick="setNavCat(this,'')">TODOS</button>
+    <div class="nav-sep"></div>
+    <button class="nav-item" data-cat="INDUCIDO" onclick="setNavCat(this,'INDUCIDO')">INDUCIDOS</button>
+    <div class="nav-sep"></div>
+    <button class="nav-item" data-cat="PORTACARBO" onclick="setNavCat(this,'PORTACARBO')">PORTACARBONES</button>
+    <div class="nav-sep"></div>
+    <button class="nav-item" data-cat="BOBENC" onclick="setNavCat(this,'BOBENC')">BOBINAS</button>
+    <div class="nav-sep"></div>
+    <button class="nav-item" data-cat="BUJIAS" onclick="setNavCat(this,'BUJIAS')">BUJÍAS</button>
+    <div class="nav-sep"></div>
+    <button class="nav-item" data-cat="LAMPARA" onclick="setNavCat(this,'LAMPARA')">LÁMPARAS</button>
+    <div class="nav-sep"></div>
+    <button class="nav-item" data-cat="LED" onclick="setNavCat(this,'LED')">LED</button>
+    <div class="nav-sep"></div>
+    <button class="nav-item" data-cat="FUSIBLE" onclick="setNavCat(this,'FUSIBLE')">FUSIBLES</button>
+    <div class="nav-sep"></div>
+    <button class="nav-item" data-cat="INYECCION" onclick="setNavCat(this,'INYECCION')">INYECTORES</button>
+  </div>
+</nav>
 
-    return `
-      <article class="fp-card">
-        <div class="fp-card-top">
-          <div>
-            <div class="fp-kicker">${esc(CATEGORIAS[producto.categoria])} / ${esc(producto.marca)}</div>
-            <h3>${esc(producto.nombre)}</h3>
-            <div class="fp-tags">
-              <span class="fp-tag">${esc(producto.modelos.join(' · '))}</span>
-              <span class="fp-tag">${esc(producto.anio)}</span>
-              <span class="fp-tag">${esc(producto.voltaje)}</span>
-              <span class="fp-tag">${esc(producto.potencia)}</span>
-              <span class="fp-tag">${totalStock} u. total</span>
-            </div>
-          </div>
-          <div class="fp-price">
-            <span>Mejor precio con stock</span>
-            <strong>${mejor ? money.format(mejor.precio) : 'Sin stock'}</strong>
-            <small>${esc(mejorProveedor)}</small>
-          </div>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-gear"></div>
+  <div class="hero-content">
+    <div class="hero-tag">// Sistema de búsqueda profesional</div>
+    <h1 class="hero-h1">Encontrá el repuesto<br><em>que necesitás</em></h1>
+    <p class="hero-sub">Buscá en todos los proveedores al mismo tiempo. Precios actualizados.</p>
+    <div class="hero-search">
+      <input type="text" id="heroSearch" placeholder="Ej: regulador Bosch, alternador Renault, código RF1053..." autocomplete="off">
+      <div class="hs-divider"></div>
+      <select id="heroVehicle">
+        <option value="">Todos los vehículos</option>
+      </select>
+      <div class="hs-divider"></div>
+      <select id="heroProvider">
+        <option value="">Todos los proveedores</option>
+        <option value="COMEXCAR">COMEXCAR</option>
+        <option value="ARZE">ARZE / IZETA</option>
+        <option value="TRESSOLS">TRESSOLS</option>
+        <option value="PH">PH</option>
+      </select>
+      <button class="hs-btn" onclick="triggerSearch()">🔍 BUSCAR</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-n" id="hsTotalProd">–</div>
+        <div class="hero-stat-l">Productos<br>cargados</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-n">4</div>
+        <div class="hero-stat-l">Proveedores<br>activos</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-n" id="hsTotalCat">–</div>
+        <div class="hero-stat-l">Categorías<br>disponibles</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES BAR -->
+<div class="features-bar">
+  <div class="features-inner">
+    <div class="feature-item">
+      <div class="feature-ico">🔍</div>
+      <div><div class="feature-title">Búsqueda inteligente</div><div class="feature-sub">Por código, nombre o vehículo</div></div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-ico">💰</div>
+      <div><div class="feature-title">Calculadora de precios</div><div class="feature-sub">Coeficiente de ganancia integrado</div></div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-ico">🏭</div>
+      <div><div class="feature-title">Múltiples proveedores</div><div class="feature-sub">ARZE, Comexcar, Tressols, PH</div></div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-ico">📋</div>
+      <div><div class="feature-title">Copiar datos al instante</div><div class="feature-sub">Código y ficha completa</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-wrap">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <!-- Categories -->
+    <div class="sidebar-box">
+      <div class="sidebar-title">Categorías</div>
+      <div class="sidebar-body" style="padding:0.5rem 0.75rem;">
+        <ul class="cat-list" id="catList"></ul>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="sidebar-box">
+      <div class="sidebar-title">Filtros</div>
+      <div class="sidebar-body">
+        <div class="filter-group">
+          <span class="filter-group-label">Marca</span>
+          <select class="filter-sel" id="fMarca" onchange="render()">
+            <option value="">Todas las marcas</option>
+          </select>
         </div>
-
-        <div class="fp-stock-table">
-          <div class="fp-stock-head">
-            <div>Proveedor</div>
-            <div>Código</div>
-            <div>Cód. original</div>
-            <div>Stock</div>
-            <div>Precio</div>
-          </div>
-          ${producto.ofertas.map(renderOferta).join('')}
+        <div class="filter-group">
+          <span class="filter-group-label">Vehículo / Modelo</span>
+          <select class="filter-sel" id="fVehicle" onchange="render()">
+            <option value="">Todos los vehículos</option>
+          </select>
         </div>
-      </article>
-    `;
-  }
+      </div>
+    </div>
 
-  function render() {
-    const resultados = filtrar();
-    const unidades = resultados.reduce((sum, p) => sum + p.ofertas.reduce((a, o) => a + o.stock, 0), 0);
+    <!-- Providers -->
+    <div class="sidebar-box">
+      <div class="sidebar-title">Proveedor</div>
+      <div class="sidebar-body">
+        <div class="provider-filters" id="providerFilters">
+          <label class="provider-check">
+            <input type="checkbox" value="COMEXCAR" checked onchange="render()">
+            <div class="provider-dot" style="background:#16A34A;"></div>
+            COMEXCAR
+          </label>
+          <label class="provider-check">
+            <input type="checkbox" value="ARZE" checked onchange="render()">
+            <div class="provider-dot" style="background:var(--orange);"></div>
+            ARZE / IZETA
+          </label>
+          <label class="provider-check">
+            <input type="checkbox" value="TRESSOLS" checked onchange="render()">
+            <div class="provider-dot" style="background:#7C3AED;"></div>
+            TRESSOLS
+          </label>
+          <label class="provider-check">
+            <input type="checkbox" value="PH" checked onchange="render()">
+            <div class="provider-dot" style="background:#2563EB;"></div>
+            PH
+          </label>
+        </div>
+      </div>
+    </div>
 
-    $('fp-count').textContent = `${resultados.length} repuestos`;
-    $('fp-units').textContent = `${unidades} unidades`;
-    $('fp-subtitle').textContent = resultados.length
-      ? 'Mostrando stock visible según filtros activos'
-      : 'No hay coincidencias con esos filtros';
+    <!-- Upload -->
+    <div class="sidebar-box">
+      <div class="sidebar-title">Cargar Catálogo</div>
+      <div class="sidebar-body">
+        <div class="upload-t" style="font-size:0.75rem;color:var(--muted);margin-bottom:0.75rem;">
+          Subí un CSV con productos del proveedor para agregar al sistema.
+        </div>
+        <label class="upload-lbl" for="fileInp">⬆ Cargar CSV</label>
+        <input type="file" id="fileInp" accept=".csv" onchange="handleUpload(event)">
+        <div id="uploadStatus"></div>
+      </div>
+    </div>
+  </aside>
 
-    $('fp-results').innerHTML = resultados.length
-      ? resultados.map(renderCard).join('')
-      : `<div class="fp-panel fp-empty"><strong>Sin resultados</strong>Probá cambiando proveedor, modelo o texto de búsqueda.</div>`;
-  }
+  <!-- CONTENT -->
+  <div class="content">
+    <!-- Toolbar -->
+    <div class="results-toolbar">
+      <div class="results-count">Mostrando <b id="rCount">0</b> productos</div>
+      <div class="toolbar-right">
+        <select class="sort-sel" id="sortSel" onchange="render()">
+          <option value="rel">Más relevante</option>
+          <option value="pa">Precio ↑</option>
+          <option value="pd">Precio ↓</option>
+          <option value="az">Nombre A→Z</option>
+        </select>
+        <div class="view-toggle">
+          <button class="view-btn active" id="gridBtn" onclick="setView('grid')" title="Grilla">⊞</button>
+          <button class="view-btn" id="listBtn" onclick="setView('list')" title="Lista">≡</button>
+        </div>
+      </div>
+    </div>
 
-  $('fp-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    render();
-  });
+    <!-- Products -->
+    <div class="products-grid" id="productsGrid"></div>
 
-  $('fp-marca').addEventListener('change', () => {
-    renderModelos($('fp-marca').value);
-    $('fp-modelo').value = '';
-    render();
-  });
+    <!-- Load more -->
+    <div class="load-more-wrap" id="loadMoreWrap" style="display:none;">
+      <button class="btn-load-more" onclick="loadMore()">VER MÁS PRODUCTOS</button>
+    </div>
+  </div>
+</div>
 
-  ['fp-cat', 'fp-modelo', 'fp-solo-stock'].forEach(id => {
-    $(id).addEventListener('change', render);
-  });
+<!-- PRODUCT MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modalBox" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Detalle del producto</div>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
 
-  $('fp-texto').addEventListener('input', render);
+<!-- TOAST -->
+<div class="toast" id="toast"><span id="toastTxt"></span></div>
 
-  document.querySelectorAll('.fp-chip').forEach(btn => {
-    btn.addEventListener('click', () => {
-      $('fp-cat').value = btn.dataset.cat || '';
-      $('fp-marca').value = btn.dataset.marca || '';
-      $('fp-texto').value = '';
-      renderModelos($('fp-marca').value);
-      $('fp-modelo').value = '';
-      render();
-    });
-  });
+<script>
+// ============================================================
+// DATA & STATE
+// ============================================================
+let DB = [];
+let filtered = [];
+let activeCategory = '';
+let viewMode = 'grid';
+const PAGE = 40;
+let showing = PAGE;
+let currentProductId = null;
 
-  $('fp-limpiar').addEventListener('click', () => {
-    $('fp-cat').value = '';
-    $('fp-marca').value = '';
-    $('fp-texto').value = '';
-    $('fp-solo-stock').checked = false;
-    renderModelos('');
-    $('fp-modelo').value = '';
-    activos.clear();
-    proveedorKeys.forEach(key => activos.add(key));
-    actualizarProveedores();
-    render();
-  });
+const CAT_ICONS = {
+  'INDUCIDO':'⚙️','PORTACARBO':'🔋','CARCAZA':'🔧','RESORTE':'🌀',
+  'ESTATOR':'🔄','ROTOR':'🔄','CARBONALT':'✏️','ENGRANAJE':'⚙️',
+  'BOBENC':'🔥','BUJIAS':'🔥','INYECCION':'💉','ENCENDIDO':'⚡',
+  'LAMPARA':'💡','LAMPELE':'💡','LAMP XEN':'💡','LED':'🌟',
+  'FUSIBLE':'🔌','PORTAFUS':'🔌','CABLE':'🔌','FICHAS':'🔌',
+  'TERMINAL':'🔌','RELAYS':'⚡','RTM':'⚡','CONECTOR':'🔌',
+  'BOMBACOMBU':'💧','ESCOBILLA':'🌧️','INSTRUMEN':'📊',
+  'SENSVEL':'📡','SONDALAM':'📡','MAP':'📡','TPS':'📡',
+  'CAPTORVOL':'🎯','CM':'🎯','PASOAPASO':'🔩','BULBOS':'💡',
+  'POLEACRIQU':'⚙️','ACCE':'🛠️','COLECTOR':'🔄','FRENOARRAN':'🛑',
+};
+function getCatIcon(rk) {
+  const u = (rk||'').toUpperCase();
+  for(const k in CAT_ICONS) if(u.includes(k)) return CAT_ICONS[k];
+  return '🔩';
+}
 
-  renderProveedores();
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const res = await fetch('productos_comexcar.json');
+    if(res.ok) {
+      const data = await res.json();
+      data.forEach(p => DB.push({
+        id: p.id||p.c,
+        codigo: p.c||p.codigo||'',
+        original: p.o||p.original||'',
+        nombre: p.n||p.nombre||'',
+        precio: parseFloat(p.p||p.precio||0),
+        rubroKey: p.rk||'',
+        rubro: p.r||p.rubroNombre||'',
+        marcaKey: p.mk||'',
+        marca: p.m||p.marcaNombre||'',
+        vehiculos: p.v||p.vehiculos||[],
+        proveedor: p.pr||p.proveedor||'COMEXCAR',
+        novedad: p.novedad||false
+      }));
+    }
+  } catch(e) { loadSample(); }
+  if(!DB.length) loadSample();
+
+  buildFilters();
+  buildCatList();
+  buildHeroVehicles();
+  updateHeroStats();
   render();
-})();
+  document.getElementById('loader').style.display='none';
+  const d = new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'});
+  document.getElementById('syncLabel').textContent = `Actualizado ${d}`;
+});
+
+function loadSample(){
+  DB=[
+    {id:'S1',codigo:'RF1053',original:'',nombre:'ARANDELAS FRENO ARRANQUE RENAULT PEUGEOT (x10)',precio:2341,rubroKey:'FRENOARRAN',rubro:'FRENO ARRANQUE',marcaKey:'RFK',marca:'RFK',vehiculos:['Renault','Peugeot'],proveedor:'COMEXCAR',novedad:false},
+    {id:'S2',codigo:'ALT-BOC',original:'0123456789',nombre:'ALTERNADOR BOSCH 70A 12V RENAULT MEGANE',precio:45800,rubroKey:'ALTERNADOR',rubro:'ALTERNADORES',marcaKey:'BOSCH',marca:'Bosch',vehiculos:['Renault','Peugeot'],proveedor:'ARZE',novedad:false},
+    {id:'S3',codigo:'REG-VAL',original:'593836',nombre:'REGULADOR DE VOLTAJE VALEO FORD KA FIESTA',precio:8900,rubroKey:'REGULAD',rubro:'REGULADORES',marcaKey:'VALEO',marca:'Valeo',vehiculos:['Ford'],proveedor:'TRESSOLS',novedad:true},
+    {id:'S4',codigo:'SOL-UNI',original:'',nombre:'SOLENOIDE UNIVERSAL 12V GENOUD',precio:5400,rubroKey:'SOLENOID',rubro:'SOLENOIDES',marcaKey:'GENOUD',marca:'Genoud',vehiculos:[],proveedor:'PH',novedad:false},
+  ];
+}
+
+// ============================================================
+// BUILD FILTERS
+// ============================================================
+function buildFilters(){
+  const marcas={}, vehicles=new Set(), cats={};
+  DB.forEach(p=>{
+    if(p.marcaKey&&p.marca) marcas[p.marcaKey]=p.marca;
+    (p.vehiculos||[]).forEach(v=>{ if(v&&v!=='Vw') vehicles.add(v); });
+    if(p.rubroKey&&p.rubro) cats[p.rubroKey]=p.rubro;
+  });
+
+  const mSel=document.getElementById('fMarca');
+  Object.entries(marcas).sort((a,b)=>a[1].localeCompare(b[1])).forEach(([k,v])=>{ mSel.add(new Option(v,k)); });
+
+  const vSel=document.getElementById('fVehicle');
+  [...vehicles].sort().forEach(v=>{ vSel.add(new Option(v,v.toLowerCase())); });
+
+  document.getElementById('hsTotalCat').textContent=Object.keys(cats).length;
+}
+
+function buildCatList(){
+  const cats={};
+  DB.forEach(p=>{ if(p.rubroKey&&p.rubro) cats[p.rubroKey]=(cats[p.rubroKey]||{label:p.rubro,count:0}), cats[p.rubroKey].count++; });
+  const sorted=Object.entries(cats).sort((a,b)=>b[1].count-a[1].count).slice(0,18);
+
+  const ul=document.getElementById('catList');
+  ul.innerHTML=`<li class="cat-item active" data-k="" onclick="setSidebarCat(this,'')">
+    <div class="cat-left"><span class="cat-ico">🔩</span> Todas las categorías</div>
+    <span class="cat-count">${DB.length}</span>
+  </li>`;
+  sorted.forEach(([k,{label,count}])=>{
+    const li=document.createElement('li');
+    li.className='cat-item'; li.dataset.k=k;
+    li.onclick=()=>setSidebarCat(li,k);
+    li.innerHTML=`<div class="cat-left"><span class="cat-ico">${getCatIcon(k)}</span> ${label}</div><span class="cat-count">${count}</span>`;
+    ul.appendChild(li);
+  });
+}
+
+function buildHeroVehicles(){
+  const vehicles=new Set();
+  DB.forEach(p=>(p.vehiculos||[]).forEach(v=>{ if(v&&v!=='Vw') vehicles.add(v); }));
+  const sel=document.getElementById('heroVehicle');
+  [...vehicles].sort().forEach(v=>sel.add(new Option(v,v.toLowerCase())));
+}
+
+function updateHeroStats(){
+  document.getElementById('hsTotalProd').textContent=DB.length.toLocaleString('es-AR');
+}
+
+// ============================================================
+// SEARCH & FILTER
+// ============================================================
+const headerSearch=document.getElementById('headerSearch');
+const heroSearch=document.getElementById('heroSearch');
+
+headerSearch.addEventListener('input',()=>{ heroSearch.value=headerSearch.value; showing=PAGE; render(); });
+heroSearch.addEventListener('input',()=>{ headerSearch.value=heroSearch.value; showing=PAGE; render(); });
+
+function triggerSearch(){
+  showing=PAGE; render();
+  document.querySelector('.main-wrap').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function setNavCat(btn,cat){
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  // Also sync sidebar
+  document.querySelectorAll('.cat-item').forEach(li=>{
+    li.classList.toggle('active', li.dataset.k===cat||(!cat&&li.dataset.k===''));
+  });
+  activeCategory=cat;
+  showing=PAGE; render();
+}
+
+function setSidebarCat(li,cat){
+  document.querySelectorAll('.cat-item').forEach(l=>l.classList.remove('active'));
+  li.classList.add('active');
+  // Sync navbar
+  document.querySelectorAll('.nav-item').forEach(b=>{
+    b.classList.toggle('active', b.dataset.cat===cat||(cat===''&&b.dataset.cat===''));
+  });
+  activeCategory=cat;
+  showing=PAGE; render();
+}
+
+function getCheckedProviders(){
+  return [...document.querySelectorAll('.provider-check input:checked')].map(i=>i.value);
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function render(){
+  const q=(heroSearch.value||headerSearch.value||'').toLowerCase().trim();
+  const marc=document.getElementById('fMarca').value;
+  const veh=document.getElementById('fVehicle').value;
+  const sort=document.getElementById('sortSel').value;
+  const providers=getCheckedProviders();
+
+  filtered=DB.filter(p=>{
+    if(!providers.includes(p.proveedor)) return false;
+    if(activeCategory && !p.rubroKey.includes(activeCategory)) return false;
+    if(marc && p.marcaKey!==marc) return false;
+    if(veh && !(p.vehiculos||[]).some(v=>v.toLowerCase().includes(veh))) return false;
+    if(q){
+      const hay=[p.nombre,p.codigo,p.original,p.marca,p.rubro,(p.vehiculos||[]).join(' ')].join(' ').toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  if(sort==='pa') filtered.sort((a,b)=>(a.precio||0)-(b.precio||0));
+  else if(sort==='pd') filtered.sort((a,b)=>(b.precio||0)-(a.precio||0));
+  else if(sort==='az') filtered.sort((a,b)=>a.nombre.localeCompare(b.nombre));
+
+  document.getElementById('rCount').textContent=filtered.length.toLocaleString('es-AR');
+
+  const grid=document.getElementById('productsGrid');
+  const lmw=document.getElementById('loadMoreWrap');
+
+  if(!filtered.length){
+    grid.innerHTML=`<div class="empty" style="grid-column:1/-1">
+      <div class="empty-ico">🔩</div>
+      <div class="empty-h">Sin resultados</div>
+      <div class="empty-t">No encontramos productos con esos filtros.<br>Intentá con otro término o modificá los filtros.</div>
+    </div>`;
+    lmw.style.display='none';
+    return;
+  }
+
+  const slice=filtered.slice(0,showing);
+  if(viewMode==='grid'){
+    grid.innerHTML=slice.map((p,i)=>cardGrid(p,i,q)).join('');
+  } else {
+    grid.innerHTML=slice.map((p,i)=>cardList(p,i,q)).join('');
+  }
+  lmw.style.display=filtered.length>showing?'block':'none';
+}
+
+function loadMore(){ showing+=PAGE; render(); }
+
+// ============================================================
+// CARD HTML — GRID
+// ============================================================
+function cardGrid(p,i,q){
+  const icon=getCatIcon(p.rubroKey);
+  const hasPrice=p.precio>0;
+  const price=hasPrice?'$'+p.precio.toLocaleString('es-AR',{minimumFractionDigits:0,maximumFractionDigits:0}):'';
+  const vehs=(p.vehiculos||[]).filter(v=>v&&v!=='Vw').slice(0,2).join(' · ');
+  const delay=Math.min(i,20)*0.025;
+  return `<div class="pcard" onclick="openModal('${p.id}')" style="animation-delay:${delay}s">
+    <div class="pcard-badges">
+      ${p.novedad?'<span class="badge badge-new">NUEVO</span>':''}
+    </div>
+    <div class="pcard-provider"><span class="provider-tag pt-${p.proveedor}">${p.proveedor}</span></div>
+    <div class="pcard-img">
+      <div class="pcard-img-placeholder">${icon}</div>
+    </div>
+    <div class="pcard-body">
+      <div class="pcard-sku">SKU: ${p.codigo}</div>
+      <div class="pcard-name">${hl(p.nombre.substring(0,65)+(p.nombre.length>65?'…':''),q)}</div>
+      ${vehs?`<div class="pcard-vehicles">🚗 ${vehs}</div>`:''}
+      <div class="pcard-marca">${p.marca||'—'} · <span class="stock-ok">● Disponible</span></div>
+      <div class="pcard-price-row">
+        ${hasPrice
+          ? `<div class="pcard-price">${price}</div>`
+          : `<div class="pcard-price-consult">Consultar precio</div>`}
+        <button class="pcard-btn" onclick="event.stopPropagation();openModal('${p.id}')">→</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ============================================================
+// CARD HTML — LIST
+// ============================================================
+function cardList(p,i,q){
+  const icon=getCatIcon(p.rubroKey);
+  const hasPrice=p.precio>0;
+  const price=hasPrice?'$'+p.precio.toLocaleString('es-AR',{minimumFractionDigits:0,maximumFractionDigits:0}):'';
+  const vehs=(p.vehiculos||[]).filter(v=>v&&v!=='Vw').slice(0,3).join(', ');
+  const delay=Math.min(i,20)*0.025;
+  return `<div class="pcard" onclick="openModal('${p.id}')" style="animation-delay:${delay}s">
+    <div class="pcard-inner">
+      <div class="pcard-img" style="height:90px;border-bottom:none;border-right:1px solid var(--border);">
+        <div class="pcard-img-placeholder" style="font-size:2rem;">${icon}</div>
+        <div class="pcard-provider" style="position:relative;top:auto;right:auto;margin-top:4px;">
+          <span class="provider-tag pt-${p.proveedor}">${p.proveedor}</span>
+        </div>
+      </div>
+      <div class="pcard-body" style="padding:0.75rem 0.75rem 0.75rem 0;">
+        <div class="pcard-sku">SKU: ${p.codigo} ${p.original?'· OEM: '+p.original:''}</div>
+        <div class="pcard-name" style="min-height:auto;">${hl(p.nombre,q)}</div>
+        ${vehs?`<div class="pcard-vehicles">🚗 ${vehs}</div>`:''}
+        <div class="pcard-marca">${p.marca||'—'} · ${p.rubro||'—'}</div>
+      </div>
+      <div style="padding:0.75rem 1rem;text-align:right;min-width:130px;flex-shrink:0;">
+        <div class="stock-ok" style="margin-bottom:4px;">● Disponible</div>
+        ${hasPrice?`<div class="pcard-price" style="font-size:1.5rem;">${price}</div>`:`<div class="pcard-price-consult">Consultar</div>`}
+        <button class="btn-primary" style="margin-top:8px;padding:6px 14px;font-size:0.72rem;" onclick="event.stopPropagation();openModal('${p.id}')">VER DETALLE</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ============================================================
+// VIEW TOGGLE
+// ============================================================
+function setView(v){
+  viewMode=v;
+  document.getElementById('gridBtn').classList.toggle('active',v==='grid');
+  document.getElementById('listBtn').classList.toggle('active',v==='list');
+  document.getElementById('productsGrid').classList.toggle('list-view',v==='list');
+  render();
+}
+
+// ============================================================
+// MODAL
+// ============================================================
+function openModal(id){
+  const p=DB.find(x=>String(x.id)===String(id));
+  if(!p) return;
+  currentProductId=id;
+  const icon=getCatIcon(p.rubroKey);
+  const hasPrice=p.precio>0;
+  const price=hasPrice?'$'+p.precio.toLocaleString('es-AR',{minimumFractionDigits:0,maximumFractionDigits:0}):'—';
+  const pid=String(id).replace(/[^a-zA-Z0-9]/g,'_');
+
+  document.getElementById('modalTitle').textContent=p.nombre.substring(0,50)+(p.nombre.length>50?'…':'');
+  document.getElementById('modalBody').innerHTML=`
+    <div class="modal-img"><span style="font-size:4rem;opacity:0.15">${icon}</span></div>
+    <div class="modal-grid">
+      <div class="modal-field"><div class="modal-field-label">Código interno</div><div class="modal-field-val">${p.codigo||'—'}</div></div>
+      <div class="modal-field"><div class="modal-field-label">Código original OEM</div><div class="modal-field-val">${p.original||'—'}</div></div>
+      <div class="modal-field"><div class="modal-field-label">Proveedor</div><div class="modal-field-val">${p.proveedor}</div></div>
+      <div class="modal-field"><div class="modal-field-label">Marca</div><div class="modal-field-val">${p.marca||'—'}</div></div>
+      <div class="modal-field"><div class="modal-field-label">Categoría</div><div class="modal-field-val">${p.rubro||'—'}</div></div>
+      <div class="modal-field"><div class="modal-field-label">Stock</div><div class="modal-field-val" style="color:#16A34A">✓ Disponible</div></div>
+      <div class="modal-field" style="grid-column:1/-1"><div class="modal-field-label">Vehículos compatibles</div><div class="modal-field-val" style="font-size:0.78rem;font-weight:400;">${(p.vehiculos||[]).filter(v=>v&&v!=='Vw').join(', ')||'Universal'}</div></div>
+    </div>
+
+    ${hasPrice ? `
+    <div class="coef-section">
+      <div class="coef-h">Calculadora de precio de venta</div>
+      <div class="coef-controls">
+        <div class="coef-pct-wrap">
+          <span class="coef-pct-label">% de ganancia:</span>
+          <input type="number" class="coef-inp" id="coef-${pid}" value="30" min="0" max="999" step="1"
+            oninput="calcCoef('${pid}',${p.precio})">
+          <span class="coef-sym">%</span>
+        </div>
+      </div>
+      <div class="coef-results" id="coef-res-${pid}">
+        ${renderCoefResult(p.precio,30)}
+      </div>
+      <div class="coef-presets" style="margin-top:0.75rem;">
+        <span style="font-size:0.65rem;color:#6B7280;margin-right:4px;">Rápido:</span>
+        ${[10,20,30,40,50,70,100].map(n=>`<button class="coef-preset" onclick="setCoef('${pid}',${n},${p.precio})">${n}%</button>`).join('')}
+      </div>
+    </div>` : ''}
+
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="copyCodigo('${p.codigo}')">📋 Copiar código</button>
+      <button class="btn-secondary" onclick="copyAll('${p.id}')">Copiar ficha completa</button>
+    </div>
+  `;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(e){
+  if(e.target===document.getElementById('modalOverlay')) closeModalDirect();
+}
+function closeModalDirect(){
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// ============================================================
+// COEFICIENTE
+// ============================================================
+function renderCoefResult(lista,pct){
+  const venta=lista*(1+pct/100);
+  const gan=venta-lista;
+  return `
+    <div class="coef-res-item"><div class="coef-res-label">Precio lista</div><div class="coef-res-val crv-lista">$${lista.toLocaleString('es-AR',{minimumFractionDigits:0,maximumFractionDigits:0})}</div></div>
+    <div class="coef-res-item"><div class="coef-res-label">Precio venta</div><div class="coef-res-val crv-venta">$${venta.toLocaleString('es-AR',{minimumFractionDigits:0,maximumFractionDigits:0})}</div></div>
+    <div class="coef-res-item"><div class="coef-res-label">Tu ganancia</div><div class="coef-res-val crv-ganancia">$${gan.toLocaleString('es-AR',{minimumFractionDigits:0,maximumFractionDigits:0})}</div></div>`;
+}
+function calcCoef(pid,lista){
+  const inp=document.getElementById(`coef-${pid}`);
+  const res=document.getElementById(`coef-res-${pid}`);
+  if(inp&&res) res.innerHTML=renderCoefResult(lista,parseFloat(inp.value)||0);
+}
+function setCoef(pid,pct,lista){
+  const inp=document.getElementById(`coef-${pid}`);
+  if(inp){inp.value=pct;calcCoef(pid,lista);}
+}
+
+// ============================================================
+// COPY
+// ============================================================
+function copyCodigo(code){ navigator.clipboard.writeText(code).catch(()=>{}); toast('Código copiado: '+code); }
+function copyAll(id){
+  const p=DB.find(x=>String(x.id)===String(id));
+  if(!p) return;
+  const txt=`Producto: ${p.nombre}\nCódigo: ${p.codigo}\nOEM: ${p.original||'—'}\nProveedor: ${p.proveedor}\nMarca: ${p.marca}\nCategoría: ${p.rubro}\nPrecio: $${p.precio?.toLocaleString('es-AR')||'Consultar'}\nVehículos: ${(p.vehiculos||[]).join(', ')||'Universal'}`;
+  navigator.clipboard.writeText(txt).catch(()=>{});
+  toast('Ficha completa copiada ✓');
+}
+function toast(msg){
+  const el=document.getElementById('toast');
+  document.getElementById('toastTxt').textContent=msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2800);
+}
+
+// ============================================================
+// CSV UPLOAD
+// ============================================================
+function handleUpload(event){
+  const file=event.target.files[0]; if(!file) return;
+  const status=document.getElementById('uploadStatus');
+  status.textContent=`⏳ Procesando ${file.name}...`;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const lines=e.target.result.split('\n').filter(l=>l.trim());
+      const headers=lines[0].split(',').map(h=>h.trim().toLowerCase().replace(/"/g,''));
+      let added=0;
+      for(let i=1;i<lines.length;i++){
+        const vals=lines[i].split(',').map(v=>v.trim().replace(/"/g,''));
+        if(vals.length<2) continue;
+        const get=k=>vals[headers.indexOf(k)]||'';
+        DB.push({
+          id:Date.now()+i, codigo:get('codigo')||vals[0],
+          original:get('original')||get('codigo_original'),
+          nombre:get('nombre')||vals[1],
+          precio:parseFloat(get('precio')||get('costo')||0),
+          rubroKey:get('rubro'), rubro:get('rubro_nombre')||get('rubro'),
+          marcaKey:get('marca'), marca:get('marca_nombre')||get('marca'),
+          vehiculos:(get('vehiculos')||'').split(';').filter(Boolean),
+          proveedor:(get('proveedor')||'NUEVO').toUpperCase(),
+          novedad:false
+        });
+        added++;
+      }
+      buildFilters(); buildCatList(); updateHeroStats();
+      showing=PAGE; render();
+      status.innerHTML=`<span style="color:var(--green)">✓ ${added} productos agregados</span>`;
+      toast(`${added} productos cargados desde ${file.name}`);
+    }catch(err){
+      status.innerHTML=`<span style="color:var(--red)">✗ Error al procesar el archivo CSV.</span>`;
+    }
+  };
+  reader.readAsText(file,'UTF-8');
+}
+
+// ESC key
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModalDirect(); });
 </script>
-```
+</body>
+</html>
