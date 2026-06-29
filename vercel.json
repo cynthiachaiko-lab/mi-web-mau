@@ -1,9 +1,7 @@
 {
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/js/(.*)",  "dest": "/public/js/$1" },
-    { "src": "/login",    "dest": "/login.html" },
-    { "src": "/admin",    "dest": "/admin.html" },
-    { "src": "/",         "dest": "/index.html" }
+  "rewrites": [
+    { "source": "/js/:path*", "destination": "/public/js/:path*" },
+    { "source": "/login",     "destination": "/login.html" },
+    { "source": "/admin",     "destination": "/admin.html" }
   ]
 }
