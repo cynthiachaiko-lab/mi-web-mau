@@ -12,7 +12,7 @@ const bcrypt = require('bcryptjs');
 
 const NOMBRE = 'Mauricio';
 const APELLIDO = 'Fischer';
-const DNI = 'CAMBIAR_POR_DNI_REAL'; // <-- completar antes de correr, borrar después
+const DNI = 'CAMBIAR_POR_DNI_REAL';
 
 function normalizarUsuario(nombre, apellido) {
   return `${nombre} ${apellido}`
