@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FixPro — Ingresar</title>
+<style>
+  body { font-family: system-ui, sans-serif; background:#0f172a; color:#e2e8f0; display:flex; min-height:100vh; align-items:center; justify-content:center; margin:0; padding:1rem; box-sizing:border-box; }
+  form { background:#1e293b; padding:2rem; border-radius:12px; width:100%; max-width:360px; box-shadow:0 10px 30px rgba(0,0,0,.3); }
+  h1 { font-size:1.25rem; margin:0 0 1.5rem; }
+  label { display:block; font-size:.85rem; margin-bottom:.25rem; color:#94a3b8; }
+  input { width:100%; padding:.6rem .75rem; margin-bottom:1rem; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#e2e8f0; box-sizing:border-box; font-size:1rem; }
+  button { width:100%; padding:.7rem; border:none; border-radius:8px; background:#3b82f6; color:white; font-weight:600; cursor:pointer; font-size:1rem; }
+  button:disabled { opacity:.6; cursor:default; }
+  #error { color:#f87171; font-size:.85rem; margin-bottom:1rem; min-height:1.2em; }
+</style>
+</head>
+<body>
+  <form id="loginForm">
+    <h1>FixPro — Ingresar</h1>
+    <div id="error"></div>
+    <label for="nombre">Nombre</label>
+    <input id="nombre" autocomplete="given-name" required>
+    <label for="apellido">Apellido</label>
+    <input id="apellido" autocomplete="family-name" required>
+    <label for="dni">DNI</label>
+    <input id="dni" type="password" inputmode="numeric" autocomplete="current-password" required>
+    <button type="submit" id="btn">Ingresar</button>
+  </form>
+
+  <script src="/js/auth-client.js"></script>
+  <script>
+    const form = document.getElementById('loginForm');
+    const errorBox = document.getElementById('error');
+    const btn = document.getElementById('btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorBox.textContent = '';
+      btn.disabled = true;
+      try {
+        await fixproLogin(
+          document.getElementById('nombre').value,
+          document.getElementById('apellido').value,
+          document.getElementById('dni').value
+        );
+        window.location.href = '/index.html';
+      } catch (err) {
+        errorBox.textContent = err.message;
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

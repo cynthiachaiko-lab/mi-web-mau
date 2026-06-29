@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FixPro Admin</title>
+<style>
+:root{--orange:#E85D04;--dark:#1A1A2E;--bg:#F4F6F8;--white:#fff;--border:#E2E6EA;--text:#1A1A2E;--text2:#4A5568;--green:#16A34A;--red:#DC2626;--radius:8px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{background:var(--dark);color:#fff;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:56px;}
+header h1{font-size:1rem;letter-spacing:1px;font-weight:700;}
+header .hright{display:flex;gap:1rem;align-items:center;}
+header a{color:#aaa;text-decoration:none;font-size:0.82rem;}header a:hover{color:#fff;}
+.btn-logout{background:none;border:1px solid #555;color:#aaa;padding:4px 12px;border-radius:5px;cursor:pointer;font-size:0.8rem;}
+.btn-logout:hover{color:#fff;border-color:#fff;}
+main{max-width:1100px;margin:0 auto;padding:2rem 1rem;}
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:1.5rem;}
+.tab{padding:8px 20px;cursor:pointer;font-size:0.85rem;font-weight:600;color:var(--text2);border-bottom:2px solid transparent;margin-bottom:-2px;background:none;border-top:none;border-left:none;border-right:none;}
+.tab.active{color:var(--orange);border-bottom-color:var(--orange);}
+.panel{display:none;}.panel.active{display:block;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.card h2{font-size:0.92rem;font-weight:700;margin-bottom:1rem;color:var(--dark);}
+table{width:100%;border-collapse:collapse;font-size:0.82rem;}
+th{text-align:left;padding:8px 10px;background:var(--bg);border-bottom:1px solid var(--border);font-weight:600;color:var(--text2);}
+td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#fafafa;}
+.btn{padding:5px 12px;border-radius:5px;font-size:0.78rem;cursor:pointer;border:1px solid transparent;font-weight:600;}
+.btn-primary{background:var(--orange);color:#fff;border-color:var(--orange);}
+.btn-primary:hover{background:#c94d02;}
+.btn-secondary{background:var(--bg);color:var(--text2);border-color:var(--border);}
+.btn-secondary:hover{border-color:var(--text2);}
+.btn-danger{background:none;color:var(--red);border-color:var(--red);}
+.btn-danger:hover{background:var(--red);color:#fff;}
+.btn-sm{padding:3px 8px;font-size:0.72rem;}
+.form-row{display:flex;gap:0.75rem;flex-wrap:wrap;align-items:flex-end;margin-bottom:1rem;}
+.form-group{display:flex;flex-direction:column;gap:4px;}
+.form-group label{font-size:0.75rem;font-weight:600;color:var(--text2);}
+.form-group input,.form-group select{padding:6px 10px;border:1px solid var(--border);border-radius:5px;font-size:0.82rem;background:var(--white);}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--orange);}
+.msg{padding:8px 12px;border-radius:5px;font-size:0.8rem;margin-bottom:0.75rem;}
+.msg.ok{background:#dcfce7;color:#166534;}
+.msg.err{background:#fee2e2;color:#991b1b;}
+.tag{display:inline-block;padding:2px 7px;border-radius:3px;font-size:0.7rem;font-weight:700;}
+.tag-admin{background:rgba(232,93,4,0.12);color:var(--orange);}
+.tag-cliente{background:rgba(22,163,74,0.12);color:var(--green);}
+.loading{color:var(--text2);font-size:0.85rem;padding:1rem 0;}
+</style>
+</head>
+<body>
+<script src="/js/auth-client.js"></script>
+
+<header>
+  <h1>⚡ FIXPRO ADMIN</h1>
+  <div class="hright">
+    <span id="adminName" style="font-size:0.8rem;color:#aaa;"></span>
+    <a href="/index.html">← Catálogo</a>
+    <button class="btn-logout" onclick="fixproLogout()">Salir</button>
+  </div>
+</header>
+
+<main>
+  <div id="authCheck" class="loading">Verificando acceso...</div>
+  <div id="adminContent" style="display:none">
+
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('clientes')">Clientes</button>
+      <button class="tab" onclick="showTab('config')">Config Global</button>
+      <button class="tab" onclick="showTab('overrides')">Overrides</button>
+    </div>
+
+    <!-- CLIENTES -->
+    <div id="panel-clientes" class="panel active">
+      <div class="card">
+        <h2>Nuevo cliente</h2>
+        <div id="msgCliente"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Nombre</label><input id="cNombre" placeholder="Juan"></div>
+          <div class="form-group"><label>Apellido</label><input id="cApellido" placeholder="Pérez"></div>
+          <div class="form-group"><label>DNI</label><input id="cDni" placeholder="12345678"></div>
+          <div class="form-group"><label>Rol</label>
+            <select id="cRol"><option value="cliente">Cliente</option><option value="admin">Admin</option></select>
+          </div>
+          <div class="form-group"><label>Coef.</label><input id="cCoef" type="number" step="0.01" placeholder="ej: 1.21" style="width:90px"></div>
+          <div class="form-group"><label>Descuento (0-1)</label><input id="cDesc" type="number" step="0.01" placeholder="ej: 0.50" style="width:90px"></div>
+          <div class="form-group"><label>&nbsp;</label><button class="btn btn-primary" onclick="crearCliente()">+ Agregar</button></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Clientes registrados</h2>
+        <div id="listaClientes" class="loading">Cargando...</div>
+      </div>
+    </div>
+
+    <!-- CONFIG GLOBAL -->
+    <div id="panel-config" class="panel">
+      <div class="card">
+        <h2>Configuración global de precios</h2>
+        <p style="font-size:0.82rem;color:var(--text2);margin-bottom:1rem;">Se aplica a clientes sin configuración propia ni override de rubro.</p>
+        <div id="msgConfig"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Coeficiente</label><input id="gCoef" type="number" step="0.01" style="width:110px"></div>
+          <div class="form-group"><label>Descuento (0-1)</label><input id="gDesc" type="number" step="0.01" style="width:110px"></div>
+          <div class="form-group"><label>&nbsp;</label><button class="btn btn-primary" onclick="guardarConfig()">Guardar</button></div>
+        </div>
+        <p style="font-size:0.75rem;color:var(--text2);margin-top:0.5rem;">Precio final = lista × (1 − descuento) × coeficiente</p>
+      </div>
+    </div>
+
+    <!-- OVERRIDES -->
+    <div id="panel-overrides" class="panel">
+      <div class="card">
+        <h2>Nuevo override de rubro</h2>
+        <div id="msgOverride"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Rubro key</label><input id="oRubro" placeholder="ej: BUJIAS"></div>
+          <div class="form-group"><label>Coef.</label><input id="oCoef" type="number" step="0.01" style="width:90px"></div>
+          <div class="form-group"><label>Descuento</label><input id="oDesc" type="number" step="0.01" style="width:90px"></div>
+          <div class="form-group"><label>Alcance</label>
+            <select id="oAlcance" onchange="toggleClienteIds()">
+              <option value="global">Global (todos)</option>
+              <option value="clientes">Clientes específicos</option>
+            </select>
+          </div>
+          <div class="form-group" id="oClienteWrap" style="display:none">
+            <label>IDs de clientes (coma)</label>
+            <input id="oClienteIds" placeholder="3,7,12">
+          </div>
+          <div class="form-group"><label>&nbsp;</label><button class="btn btn-primary" onclick="crearOverride()">+ Agregar</button></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Overrides activos</h2>
+        <div id="listaOverrides" class="loading">Cargando...</div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+// ---- AUTH CHECK ----
+(async () => {
+  const cfg = await fixproObtenerMiConfig();
+  if (!cfg) return; // redirigió a login
+  if (cfg.rol !== 'admin') {
+    document.getElementById('authCheck').innerHTML = '<b style="color:red">Acceso denegado.</b> Solo administradores.';
+    return;
+  }
+  document.getElementById('authCheck').style.display = 'none';
+  document.getElementById('adminContent').style.display = 'block';
+  if (cfg.nombre) document.getElementById('adminName').textContent = cfg.nombre;
+  cargarClientes();
+  cargarConfig();
+  cargarOverrides();
+})();
+
+// ---- TABS ----
+function showTab(t) {
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active', ['clientes','config','overrides'][i]===t));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+t).classList.add('active');
+}
+
+// ---- HELPERS ----
+function msg(id, text, type='ok') {
+  const el = document.getElementById(id);
+  el.className = 'msg '+type;
+  el.textContent = text;
+  setTimeout(()=>el.textContent='', 3000);
+}
+async function api(url, method='GET', body=null) {
+  const opts = { method, headers:{'Content-Type':'application/json'} };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(url, opts);
+  return { ok: r.ok, data: await r.json().catch(()=>({})) };
+}
+
+// ---- CLIENTES ----
+async function cargarClientes() {
+  const { ok, data } = await api('/api/admin/clientes');
+  const el = document.getElementById('listaClientes');
+  if (!ok || !data.length) { el.innerHTML = '<p class="loading">Sin clientes.</p>'; return; }
+  el.innerHTML = `<table>
+    <thead><tr><th>ID</th><th>Nombre</th><th>Rol</th><th>Coef.</th><th>Desc.</th><th>Activo</th><th></th></tr></thead>
+    <tbody>${data.map(c=>`<tr id="row-${c.id}">
+      <td>${c.id}</td>
+      <td>${c.nombre} ${c.apellido}</td>
+      <td><span class="tag tag-${c.rol}">${c.rol}</span></td>
+      <td><input type="number" step="0.01" value="${c.coeficiente_default??''}" placeholder="global" style="width:70px;padding:3px 6px;border:1px solid var(--border);border-radius:4px;font-size:0.78rem;" id="coef-${c.id}"></td>
+      <td><input type="number" step="0.01" value="${c.descuento_default??''}" placeholder="global" style="width:70px;padding:3px 6px;border:1px solid var(--border);border-radius:4px;font-size:0.78rem;" id="desc-${c.id}"></td>
+      <td><input type="checkbox" ${c.activo?'checked':''} onchange="toggleActivo(${c.id},this.checked)"></td>
+      <td style="display:flex;gap:4px;">
+        <button class="btn btn-secondary btn-sm" onclick="editarCliente(${c.id})">Guardar</button>
+        <button class="btn btn-danger btn-sm" onclick="eliminarCliente(${c.id},'${c.nombre} ${c.apellido}')">✕</button>
+      </td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+async function crearCliente() {
+  const b = {
+    nombre: document.getElementById('cNombre').value.trim(),
+    apellido: document.getElementById('cApellido').value.trim(),
+    dni: document.getElementById('cDni').value.trim(),
+    rol: document.getElementById('cRol').value,
+    coeficiente: parseFloat(document.getElementById('cCoef').value)||null,
+    descuento: parseFloat(document.getElementById('cDesc').value)||null,
+  };
+  if (!b.nombre||!b.apellido||!b.dni) { msg('msgCliente','Nombre, apellido y DNI son requeridos.','err'); return; }
+  const { ok, data } = await api('/api/admin/clientes','POST',b);
+  if (ok) { msg('msgCliente','Cliente creado.'); cargarClientes(); ['cNombre','cApellido','cDni','cCoef','cDesc'].forEach(id=>document.getElementById(id).value=''); }
+  else msg('msgCliente', data.error||'Error al crear.', 'err');
+}
+async function editarCliente(id) {
+  const coef = parseFloat(document.getElementById('coef-'+id).value)||null;
+  const desc = parseFloat(document.getElementById('desc-'+id).value)||null;
+  const { ok, data } = await api('/api/admin/clientes','PUT',{ id, coeficiente_default: coef, descuento_default: desc });
+  if (ok) msg('msgCliente','Precios actualizados.');
+  else msg('msgCliente', data.error||'Error.', 'err');
+}
+async function toggleActivo(id, activo) {
+  const { ok, data } = await api('/api/admin/clientes','PUT',{ id, activo });
+  if (!ok) msg('msgCliente', data.error||'Error.', 'err');
+}
+async function eliminarCliente(id, nombre) {
+  if (!confirm(`Eliminar a ${nombre}?`)) return;
+  const { ok, data } = await api('/api/admin/clientes','DELETE',{ id });
+  if (ok) { msg('msgCliente','Cliente eliminado.'); cargarClientes(); }
+  else msg('msgCliente', data.error||'Error.', 'err');
+}
+
+// ---- CONFIG GLOBAL ----
+async function cargarConfig() {
+  const { ok, data } = await api('/api/admin/config-global');
+  if (ok) {
+    document.getElementById('gCoef').value = data.coeficiente_default ?? 1.21;
+    document.getElementById('gDesc').value = data.descuento_default ?? 0.50;
+  }
+}
+async function guardarConfig() {
+  const b = {
+    coeficiente_default: parseFloat(document.getElementById('gCoef').value),
+    descuento_default: parseFloat(document.getElementById('gDesc').value),
+  };
+  const { ok, data } = await api('/api/admin/config-global','PUT',b);
+  if (ok) msg('msgConfig','Config guardada.');
+  else msg('msgConfig', data.error||'Error.', 'err');
+}
+
+// ---- OVERRIDES ----
+function toggleClienteIds() {
+  document.getElementById('oClienteWrap').style.display =
+    document.getElementById('oAlcance').value === 'clientes' ? 'block' : 'none';
+}
+async function cargarOverrides() {
+  // No hay GET de overrides en la API; mostramos placeholder
+  document.getElementById('listaOverrides').innerHTML =
+    '<p style="font-size:0.82rem;color:var(--text2)">Los overrides se aplican en tiempo real. Recargá el catálogo para verlos.</p>';
+}
+async function crearOverride() {
+  const alcance = document.getElementById('oAlcance').value;
+  const b = {
+    rubro_key: document.getElementById('oRubro').value.trim().toUpperCase(),
+    coeficiente: parseFloat(document.getElementById('oCoef').value),
+    descuento: parseFloat(document.getElementById('oDesc').value),
+    alcance,
+  };
+  if (alcance === 'clientes') {
+    b.cliente_ids = document.getElementById('oClienteIds').value.split(',').map(s=>parseInt(s.trim())).filter(Boolean);
+  }
+  if (!b.rubro_key||isNaN(b.coeficiente)||isNaN(b.descuento)) { msg('msgOverride','Completá rubro, coef y descuento.','err'); return; }
+  const { ok, data } = await api('/api/admin/overrides','POST',b);
+  if (ok) { msg('msgOverride','Override creado.'); ['oRubro','oCoef','oDesc','oClienteIds'].forEach(id=>document.getElementById(id).value=''); }
+  else msg('msgOverride', data.error||'Error.', 'err');
+}
+</script>
+</body>
+</html>

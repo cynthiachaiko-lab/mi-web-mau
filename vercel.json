@@ -1,7 +1,7 @@
 {
+  "outputDirectory": "public",
   "rewrites": [
-    { "source": "/js/:path*", "destination": "/public/js/:path*" },
-    { "source": "/login",     "destination": "/login.html" },
-    { "source": "/admin",     "destination": "/admin.html" }
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/admin", "destination": "/admin.html" }
   ]
 }
