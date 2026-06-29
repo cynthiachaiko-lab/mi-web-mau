@@ -10,7 +10,7 @@ function normalizar(nombre, apellido) {
 
 module.exports = async (req, res) => {
   const { secret } = req.query;
-  if (secret !== process.env.JWT_SECRET?.slice(0, 12)) {
+  if (secret !== 'setup-fixpro-2026') {
     return res.status(403).json({ error: 'forbidden' });
   }
 
